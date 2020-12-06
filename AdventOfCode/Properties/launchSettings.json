@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "AdventOfCode": {
+      "commandName": "Project",
+      "commandLineArgs": "\"C:\\Users\\brian\\Google Drive\\AdventOfCode\\2020\\Day 2\\input.txt\""
+    }
+  }
+}
