@@ -32,35 +32,36 @@ namespace AdventOfCode
            
             if(args.Length > 0)
             {
-                string[] lines = File.ReadAllLines(args[0]);
+                List<string> lines = File.ReadAllLines(args[0]).ToList();
                 //PrintArray(lines);
-                List<Model> pwList = new List<Model>();
-                for(var i = 0; i < lines.Length; i ++)
-                {
-                    string[] subs = lines[i].Split(' ');
-                    string[] minMax = subs[0].Split('-');
-                    string[] charCheck = subs[1].Split(':');
-                    var temp = new Model
-                    {
-                        Min = int.Parse(minMax[0]),
-                        Max = int.Parse(minMax[1]),
-                        Char = char.Parse(charCheck[0]),
-                        Pw = subs[2],
-                        Count = 0,
-                        Pass = false
-                    };
-                    temp.Pass = (temp.Pw[temp.Min-1].Equals(temp.Char) && !temp.Pw[temp.Max-1].Equals(temp.Char)) ||
-                                    (!temp.Pw[temp.Min - 1].Equals(temp.Char) && temp.Pw[temp.Max - 1].Equals(temp.Char));
-                    if (temp.Pass)
-                    {
-                        pwList.Add(temp);
-                    }
-                }
-                foreach(var val in pwList)
-                {
-                    Console.WriteLine(val);
-                }
-                Console.WriteLine($"Result: {pwList.Count}\r\n");
+                Day3(lines);
+                //List<Model> pwList = new List<Model>();
+                //for(var i = 0; i < lines.Length; i ++)
+                //{
+                //    string[] subs = lines[i].Split(' ');
+                //    string[] minMax = subs[0].Split('-');
+                //    string[] charCheck = subs[1].Split(':');
+                //    var temp = new Model
+                //    {
+                //        Min = int.Parse(minMax[0]),
+                //        Max = int.Parse(minMax[1]),
+                //        Char = char.Parse(charCheck[0]),
+                //        Pw = subs[2],
+                //        Count = 0,
+                //        Pass = false
+                //    };
+                //    temp.Pass = (temp.Pw[temp.Min-1].Equals(temp.Char) && !temp.Pw[temp.Max-1].Equals(temp.Char)) ||
+                //                    (!temp.Pw[temp.Min - 1].Equals(temp.Char) && temp.Pw[temp.Max - 1].Equals(temp.Char));
+                //    if (temp.Pass)
+                //    {
+                //        pwList.Add(temp);
+                //    }
+                //}
+                //foreach(var val in pwList)
+                //{
+                //    Console.WriteLine(val);
+                //}
+                //Console.WriteLine($"Result: {pwList.Count}\r\n");
 
 
                 //int[] myInts = Array.ConvertAll(lines, s => int.Parse(s));
@@ -90,12 +91,41 @@ namespace AdventOfCode
             }
         }
 
-        private static void PrintArray(Array list)
+        private static void PrintArray<T>(List<T> list)
         {
             foreach (var val in list)
             {
                 Console.WriteLine(val);
             }
+        }
+
+        private static void Day3<T>(List<T> list)
+        {
+            var item = list.First().ToString();
+            Console.WriteLine($"Line Count: {item.Length}");
+            Console.WriteLine($"List Count: {list.Count}");
+
+            T[] theHill = new T[list.Count];
+            theHill = list.ToArray();
+            var treeCount = 0;
+            var i = 0;
+            var j = 0;
+            for(i = j = 0; j < theHill.Length;)
+            {
+                i += 3;
+                j += 1;
+                if (i > theHill[j].ToString().Length)
+                {
+                    i = theHill[j].ToString().Length - i;
+                    j++;
+                }
+                if (theHill[j].ToString().Substring(i).Equals('#'))
+                {
+                    treeCount++;
+                }
+            }
+
+            Console.WriteLine($"Result: {treeCount}\r\n");
         }
 
     }
