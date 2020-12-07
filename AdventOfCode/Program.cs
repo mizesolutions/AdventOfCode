@@ -7,83 +7,19 @@ namespace AdventOfCode
 {
     public static class Program
     {
-        public partial class Model
-        {
-            public int Min { get; set; }
-            public int Max { get; set; }
-            public char Char { get; set; }
-            public string Pw { get; set; }
-            public int Count { get; set; }
-            public bool Pass { get; set; }
-            public override string ToString()
-            {
-                return $"\r\nMODEL\r\n" +
-                       $"Min: {Min}\r\n" +
-                       $"Max: {Max}\r\n" +
-                       $"Char: {Char}\r\n" +
-                       $"Pw: {Pw}\r\n" +
-                       $"Count: {Count}\r\n" +
-                       $"Pass: {Pass}\r\n";
-            }
-        }
-
         static void Main(string[] args)
         {
            
             if(args.Length > 0)
             {
-                List<string> lines = File.ReadAllLines(args[0]).ToList();
+                //List<string> lines = File.ReadAllLines(args[0]).ToList();
+                var input = File.ReadAllText(args[0]);
+                //Console.WriteLine($"Records: {lines.Count(p => p.Equals(""))}\r\n");
                 //PrintArray(lines);
-                Console.WriteLine($"Resutl: {Day3(lines, 1, 1) * Day3(lines, 3, 1) * Day3(lines, 5, 1) * Day3(lines, 7, 1) * Day3(lines, 1, 2)}");
-                //List<Model> pwList = new List<Model>();
-                //for(var i = 0; i < lines.Length; i ++)
-                //{
-                //    string[] subs = lines[i].Split(' ');
-                //    string[] minMax = subs[0].Split('-');
-                //    string[] charCheck = subs[1].Split(':');
-                //    var temp = new Model
-                //    {
-                //        Min = int.Parse(minMax[0]),
-                //        Max = int.Parse(minMax[1]),
-                //        Char = char.Parse(charCheck[0]),
-                //        Pw = subs[2],
-                //        Count = 0,
-                //        Pass = false
-                //    };
-                //    temp.Pass = (temp.Pw[temp.Min-1].Equals(temp.Char) && !temp.Pw[temp.Max-1].Equals(temp.Char)) ||
-                //                    (!temp.Pw[temp.Min - 1].Equals(temp.Char) && temp.Pw[temp.Max - 1].Equals(temp.Char));
-                //    if (temp.Pass)
-                //    {
-                //        pwList.Add(temp);
-                //    }
-                //}
-                //foreach(var val in pwList)
-                //{
-                //    Console.WriteLine(val);
-                //}
-                //Console.WriteLine($"Result: {pwList.Count}\r\n");
-
-
-                //int[] myInts = Array.ConvertAll(lines, s => int.Parse(s));
-                //Array.Sort(myInts);
-                //foreach (var val in myInts)
-                //{
-                //    Console.WriteLine(val);
-                //}
-
-                //for(var p1 = 0; p1 < myInts.Length; p1++)
-                //{
-                //    for(var p2 = p1; p2 < myInts.Length; p2++)
-                //    {
-                //        for (var p3 = p1; p3 < myInts.Length; p3++)
-                //        {
-                //            if ((myInts[p1] + myInts[p2] + myInts[p3]) == 2020)
-                //            {
-                //                Console.WriteLine($"Result: {myInts[p1] * myInts[p2] * myInts[p3]}");
-                //            }
-                //        }
-                //    }
-                //}
+                //Day4(lines);
+                Day4_1_2(input);
+                //Console.WriteLine($"Resutl: {Day3(lines, 1, 1) * Day3(lines, 3, 1) * Day3(lines, 5, 1) * Day3(lines, 7, 1) * Day3(lines, 1, 2)}");
+                
             }
             else
             {
@@ -140,6 +76,177 @@ namespace AdventOfCode
             chars[index] = newChar;
             return new string(chars);
         }
+
+        public partial class Model2
+        {
+            public string byr { get; set; }
+            public string iyr { get; set; }
+            public string eyr { get; set; }
+            public string hgt { get; set; }
+            public string hcl { get; set; }
+            public string ecl { get; set; }
+            public string pid { get; set; }
+            public string cid { get; set; }
+            public bool Pass { get; set; }
+            public override string ToString()
+            {
+                return $"\r\nMODEL2\r\n" +
+                       $"byr:{byr}\r\n" +
+                       $"iyr:{iyr}\r\n" +
+                       $"eyr:{eyr}\r\n" +
+                       $"hgt:{hgt}\r\n" +
+                       $"hcl:{hcl}\r\n" +
+                       $"ecl:{ecl}\r\n" +
+                       $"pid:{pid}\r\n" +
+                       $"cid:{cid}\r\n" +
+                       $"Pass: {Pass}\r\n";
+            }
+        }
+
+        private static void Day4_1_2(string input)
+        {
+            //Console.WriteLine(input);
+            int validPassports = 0;
+            Dictionary<string, bool> fieldIds = new Dictionary<string, bool>()
+            {
+                {"byr", true},
+                {"iyr", true},
+                {"eyr", true},
+                {"hgt", true},
+                {"hcl", true},
+                {"ecl", true},
+                {"pid", true},
+                {"cid", false}
+            };
+            int expectedReqFieldCount = fieldIds.Count(x => x.Value);
+            var passports = input.Replace("\r", "").Replace("\n\n", "@").Split(new char[] { '@' }, StringSplitOptions.RemoveEmptyEntries);
+            Console.WriteLine($"Found {passports.Length:N0} passports");
+            foreach(string passport in passports)
+            {
+                string[] parts = passport.Split(new char[] { '\n', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                var fields = parts.Select(x => x.Split(':')).Select(x => new { key = x[0], value = x[1] }).ToList();
+                int reqFieldCount = 0, optFieldCount = 0;
+                foreach (var field in fields)
+                {
+                    if(fieldIds.TryGetValue(field.key, out bool required))
+                    {
+                        if (required) ++reqFieldCount;
+                        else ++optFieldCount;
+                    }
+                    else
+                    {
+                        Console.WriteLine($"We don't recogise field '{field.key}'");
+                    }
+                }
+                if (reqFieldCount == expectedReqFieldCount) ++validPassports;
+            }
+            Console.WriteLine($"Valid passports: {validPassports:N0}");
+        }
+
+        private static void Day4<T>(List<T> list)
+        {
+            Console.WriteLine($"::: Start Day4 func :::");
+            List<string> set = new List<string>();
+            foreach(var val in list)
+            {
+                if (string.IsNullOrEmpty(val.ToString()))
+                {
+                    set.Add("-");
+                }
+                else
+                {
+                    if (val.ToString().Contains(" "))
+                    {
+                        string[] temp = val.ToString().Split(" ");
+                        foreach (var s in temp)
+                        {
+                            set.Add(s);
+                        }
+                    }
+                    else
+                    {
+                        set.Add(val.ToString());
+                    }
+                }
+            }
+            var modelSet = BuildSet(set);
+            var checkCount = modelSet.Count(p => p.Pass == true);
+            var falseCount = modelSet.Count(p => p.Pass == false);
+            foreach (var e in modelSet)
+            {
+                if (!e.Pass)
+                {
+                    Console.WriteLine(e);
+                }
+            }
+            Console.WriteLine($"Set Count Post: {modelSet.Count}\r\n");
+            Console.WriteLine($"True Result: {checkCount}\r\n");
+            Console.WriteLine($"False Result: {falseCount}\r\n");
+            Console.WriteLine($"::: End Day4 func :::");
+        }
+
+        private static List<Model2> BuildSet(List<string> list)
+        {
+            Console.WriteLine($"::: Start BuildSet func :::");
+            List<Model2> set = new List<Model2>();
+            var tempModel2 = new Model2();
+            foreach (var val in list)
+            {
+                if (val.ToString().Equals("-"))
+                {
+                    tempModel2.Pass = TestSet(tempModel2);
+                    set.Add(tempModel2);
+                    Console.WriteLine($"temp: {tempModel2}");
+                    tempModel2 = new Model2();
+                }
+                else
+                {
+                    var id = val.ToString().Substring(0, 3);
+                    switch (id)
+                    {
+                        case "byr":
+                            tempModel2.byr = val.ToString().Substring(4);
+                            break;
+                        case "iyr":
+                            tempModel2.iyr = val.ToString().Substring(4);
+                            break;
+                        case "eyr":
+                            tempModel2.eyr = val.ToString().Substring(4);
+                            break;
+                        case "hgt":
+                            tempModel2.hgt = val.ToString().Substring(4);
+                            break;
+                        case "hcl":
+                            tempModel2.hcl = val.ToString().Substring(4);
+                            break;
+                        case "ecl":
+                            tempModel2.ecl = val.ToString().Substring(4);
+                            break;
+                        case "pid":
+                            tempModel2.pid = val.ToString().Substring(4);
+                            break;
+                        case "cid":
+                            tempModel2.cid = val.ToString().Substring(4);
+                            break;
+                        default:
+                            Console.WriteLine($"Not Found: {id}");
+                            break;
+                    }
+                }
+            }
+            //PrintArray(set);
+            Console.WriteLine($"::: End BuildSet func :::");
+            return set;
+        }
+
+        private static bool TestSet(Model2 set)
+        {
+            return !string.IsNullOrEmpty(set.byr) && !string.IsNullOrEmpty(set.iyr) &&
+                   !string.IsNullOrEmpty(set.eyr) && !string.IsNullOrEmpty(set.hgt) &&
+                   !string.IsNullOrEmpty(set.hcl) && !string.IsNullOrEmpty(set.ecl) &&
+                   !string.IsNullOrEmpty(set.pid);
+        }
+
 
     }
 }
