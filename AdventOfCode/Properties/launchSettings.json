@@ -2,7 +2,7 @@
   "profiles": {
     "AdventOfCode": {
       "commandName": "Project",
-      "commandLineArgs": "\"C:\\Users\\gw5775\\Google Drive\\brm\\AoC\\2020\\Day 3\\input.txt\""
+      "commandLineArgs": "\"C:\\Users\\brian\\Google Drive\\AdventOfCode\\2020\\Day 3\\input.txt\""
     }
   }
 }

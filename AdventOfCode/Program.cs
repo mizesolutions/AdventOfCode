@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace AdventOfCode
 {
-    class Program
+    public static class Program
     {
         public partial class Model
         {
@@ -34,7 +34,7 @@ namespace AdventOfCode
             {
                 List<string> lines = File.ReadAllLines(args[0]).ToList();
                 //PrintArray(lines);
-                Day3(lines);
+                Console.WriteLine($"Resutl: {Day3(lines, 1, 1) * Day3(lines, 3, 1) * Day3(lines, 5, 1) * Day3(lines, 7, 1) * Day3(lines, 1, 2)}");
                 //List<Model> pwList = new List<Model>();
                 //for(var i = 0; i < lines.Length; i ++)
                 //{
@@ -99,7 +99,7 @@ namespace AdventOfCode
             }
         }
 
-        private static void Day3<T>(List<T> list)
+        private static int Day3<T>(List<T> list, int r, int d)
         {
             var item = list.First().ToString();
             Console.WriteLine($"Line Count: {item.Length}");
@@ -110,22 +110,35 @@ namespace AdventOfCode
             var treeCount = 0;
             var i = 0;
             var j = 0;
-            for(i = j = 0; j < theHill.Length;)
+            while(j < theHill.Length - 1)
             {
-                i += 3;
-                j += 1;
-                if (i > theHill[j].ToString().Length)
+                i += r;
+                j += d;
+                if (i > theHill[j].ToString().Length - 1)
                 {
-                    i = theHill[j].ToString().Length - i;
-                    j++;
+                    i -= theHill[j].ToString().Length;
                 }
-                if (theHill[j].ToString().Substring(i).Equals('#'))
+                var row = theHill[j].ToString();
+                var tree = row[i];
+                //Console.WriteLine($"{tree}");
+                if (tree.Equals('#'))
                 {
                     treeCount++;
                 }
             }
-
             Console.WriteLine($"Result: {treeCount}\r\n");
+            return treeCount;
+        }
+
+        private static string ReplaceAt(this string input, int index, char newChar)
+        {
+            if (input == null)
+            {
+                throw new ArgumentNullException("input");
+            }
+            char[] chars = input.ToCharArray();
+            chars[index] = newChar;
+            return new string(chars);
         }
 
     }
