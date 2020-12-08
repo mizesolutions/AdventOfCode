@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace AdventOfCode
 {
@@ -83,6 +84,7 @@ namespace AdventOfCode
             public string iyr { get; set; }
             public string eyr { get; set; }
             public string hgt { get; set; }
+            public string hgtType { get; set; }
             public string hcl { get; set; }
             public string ecl { get; set; }
             public string pid { get; set; }
@@ -130,123 +132,84 @@ namespace AdventOfCode
                 int reqFieldCount = 0, optFieldCount = 0;
                 foreach (var field in fields)
                 {
-                    if(fieldIds.TryGetValue(field.key, out bool required))
+                    switch (field.key)
+                    {
+                        case "byr":
+                            temp.byr = field.value;
+                            break;
+                        case "iyr":
+                            temp.iyr = field.value;
+                            break;
+                        case "eyr":
+                            temp.eyr = field.value;
+                            break;
+                        case "hgt":
+                            temp.hgt = field.value.Substring(0, field.value.Length - 2);
+                            temp.hgtType = field.value.Substring(field.value.Length - 2);
+                            break;
+                        case "hcl":
+                            temp.hcl = field.value;
+                            break;
+                        case "ecl":
+                            temp.ecl = field.value;
+                            break;
+                        case "pid":
+                            temp.pid = field.value;
+                            break;
+                        case "cid":
+                            temp.cid = field.value;
+                            break;
+                        default:
+                            Console.WriteLine($"Not Found: {field.key}");
+                            break;
+                    }
+
+                    if (fieldIds.TryGetValue(field.key, out bool required))
                     {
                         if (required) ++reqFieldCount;
                         else ++optFieldCount;
                     }
                     else
                     {
-                        Console.WriteLine($"We don't recogise field '{field.key}'");
+                        Console.WriteLine($"We don't recogize field '{field.key}'");
                     }
                 }
                 if (reqFieldCount == expectedReqFieldCount) ++validPassports;
+                temp.Pass = TestSet(temp);
+                ppList.Add(temp);
             }
-            Console.WriteLine($"Valid passports: {validPassports:N0}");
-        }
-
-        private static void Day4<T>(List<T> list)
-        {
-            Console.WriteLine($"::: Start Day4 func :::");
-            List<string> set = new List<string>();
-            foreach(var val in list)
-            {
-                if (string.IsNullOrEmpty(val.ToString()))
-                {
-                    set.Add("-");
-                }
-                else
-                {
-                    if (val.ToString().Contains(" "))
-                    {
-                        string[] temp = val.ToString().Split(" ");
-                        foreach (var s in temp)
-                        {
-                            set.Add(s);
-                        }
-                    }
-                    else
-                    {
-                        set.Add(val.ToString());
-                    }
-                }
-            }
-            var modelSet = BuildSet(set);
-            var checkCount = modelSet.Count(p => p.Pass == true);
-            var falseCount = modelSet.Count(p => p.Pass == false);
-            foreach (var e in modelSet)
-            {
-                if (!e.Pass)
-                {
-                    Console.WriteLine(e);
-                }
-            }
-            Console.WriteLine($"Set Count Post: {modelSet.Count}\r\n");
-            Console.WriteLine($"True Result: {checkCount}\r\n");
-            Console.WriteLine($"False Result: {falseCount}\r\n");
-            Console.WriteLine($"::: End Day4 func :::");
-        }
-
-        private static List<Model2> BuildSet(List<string> list)
-        {
-            Console.WriteLine($"::: Start BuildSet func :::");
-            List<Model2> set = new List<Model2>();
-            var tempModel2 = new Model2();
-            foreach (var val in list)
-            {
-                if (val.ToString().Equals("-"))
-                {
-                    tempModel2.Pass = TestSet(tempModel2);
-                    set.Add(tempModel2);
-                    Console.WriteLine($"temp: {tempModel2}");
-                    tempModel2 = new Model2();
-                }
-                else
-                {
-                    var id = val.ToString().Substring(0, 3);
-                    switch (id)
-                    {
-                        case "byr":
-                            tempModel2.byr = val.ToString().Substring(4);
-                            break;
-                        case "iyr":
-                            tempModel2.iyr = val.ToString().Substring(4);
-                            break;
-                        case "eyr":
-                            tempModel2.eyr = val.ToString().Substring(4);
-                            break;
-                        case "hgt":
-                            tempModel2.hgt = val.ToString().Substring(4);
-                            break;
-                        case "hcl":
-                            tempModel2.hcl = val.ToString().Substring(4);
-                            break;
-                        case "ecl":
-                            tempModel2.ecl = val.ToString().Substring(4);
-                            break;
-                        case "pid":
-                            tempModel2.pid = val.ToString().Substring(4);
-                            break;
-                        case "cid":
-                            tempModel2.cid = val.ToString().Substring(4);
-                            break;
-                        default:
-                            Console.WriteLine($"Not Found: {id}");
-                            break;
-                    }
-                }
-            }
-            //PrintArray(set);
-            Console.WriteLine($"::: End BuildSet func :::");
-            return set;
+            Console.WriteLine($"Valid passports - Part 1: {validPassports:N0}");
+            Console.WriteLine($"Valid passports - Part 2: {ppList.Count(p => p.Pass):N0}");
         }
 
         private static bool TestSet(Model2 set)
         {
-            return !string.IsNullOrEmpty(set.byr) && !string.IsNullOrEmpty(set.iyr) &&
-                   !string.IsNullOrEmpty(set.eyr) && !string.IsNullOrEmpty(set.hgt) &&
-                   !string.IsNullOrEmpty(set.hcl) && !string.IsNullOrEmpty(set.ecl) &&
-                   !string.IsNullOrEmpty(set.pid);
+            return !string.IsNullOrEmpty(set.byr) && int.TryParse(set.byr, out _) && int.Parse(set.byr) >= 1920 && int.Parse(set.byr) <= 2002 &&
+                   !string.IsNullOrEmpty(set.iyr) && int.TryParse(set.iyr, out _) && int.Parse(set.iyr) >= 2010 && int.Parse(set.iyr) <= 2020 &&
+                   !string.IsNullOrEmpty(set.eyr) && int.TryParse(set.eyr, out _) && int.Parse(set.eyr) >= 2020 && int.Parse(set.eyr) <= 2030 &&
+                   !string.IsNullOrEmpty(set.hgt) && int.TryParse(set.hgt, out _) && ((set.hgtType == "cm" && int.Parse(set.hgt) >= 150 && int.Parse(set.hgt) <= 193) || (set.hgtType == "in" && int.Parse(set.hgt) >= 59 && int.Parse(set.hgt) <= 76)) &&
+                   !string.IsNullOrEmpty(set.hcl) && set.hcl[0] == '#' && set.hcl.Length == 7 && TestHcl(set.hcl) &&
+                   !string.IsNullOrEmpty(set.ecl) && set.ecl.Length == 3 && TestEcl(set.ecl) &&
+                   !string.IsNullOrEmpty(set.pid) && int.TryParse(set.pid, out _) && TestPid(set.pid);
+        }
+
+        private static bool TestHcl(string hcl)
+        {
+            var pattern = "^#([0-9a-f]{6})$";
+            Regex rg = new Regex(pattern);
+            return rg.IsMatch(hcl);
+        }
+
+        private static bool TestEcl(string ecl)
+        {
+            return ecl == "amb" || ecl == "blu" || ecl == "brn" || ecl == "gry" || ecl == "grn" || ecl == "hzl" || ecl == "oth";
+        }
+
+        private static bool TestPid(string pid)
+        {
+            var pattern = "^([0-9]{9})$";
+            Regex rg = new Regex(pattern);
+            return rg.IsMatch(pid);
         }
 
 
