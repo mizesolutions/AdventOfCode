@@ -121,8 +121,10 @@ namespace AdventOfCode
             int expectedReqFieldCount = fieldIds.Count(x => x.Value);
             var passports = input.Replace("\r", "").Replace("\n\n", "@").Split(new char[] { '@' }, StringSplitOptions.RemoveEmptyEntries);
             Console.WriteLine($"Found {passports.Length:N0} passports");
+            List<Model2> ppList = new List<Model2>();
             foreach(string passport in passports)
             {
+                var temp = new Model2();
                 string[] parts = passport.Split(new char[] { '\n', ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 var fields = parts.Select(x => x.Split(':')).Select(x => new { key = x[0], value = x[1] }).ToList();
                 int reqFieldCount = 0, optFieldCount = 0;
