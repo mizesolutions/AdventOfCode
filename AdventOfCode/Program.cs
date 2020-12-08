@@ -13,12 +13,13 @@ namespace AdventOfCode
            
             if(args.Length > 0)
             {
-                //List<string> lines = File.ReadAllLines(args[0]).ToList();
-                var input = File.ReadAllText(args[0]);
+                List<string> input = File.ReadAllLines(args[0]).ToList();
+                //var input = File.ReadAllText(args[0]);
                 //Console.WriteLine($"Records: {lines.Count(p => p.Equals(""))}\r\n");
                 //PrintArray(lines);
                 //Day4(lines);
-                Day4_1_2(input);
+                //Day4_1_2(input);
+                Day5_1(input);
                 //Console.WriteLine($"Resutl: {Day3(lines, 1, 1) * Day3(lines, 3, 1) * Day3(lines, 5, 1) * Day3(lines, 7, 1) * Day3(lines, 1, 2)}");
                 
             }
@@ -34,6 +35,7 @@ namespace AdventOfCode
             {
                 Console.WriteLine(val);
             }
+            Console.WriteLine($"Record Count: {list.Count}");
         }
 
         private static int Day3<T>(List<T> list, int r, int d)
@@ -213,5 +215,78 @@ namespace AdventOfCode
         }
 
 
+        private static void Day5_1(List<string> input)
+        {
+            /*
+                FBFBBFFRLR
+             
+                Start by considering the whole range, rows 0 through 127.
+                F means to take the lower half, keeping rows 0 through 63.
+                B means to take the upper half, keeping rows 32 through 63.
+                F means to take the lower half, keeping rows 32 through 47.
+                B means to take the upper half, keeping rows 40 through 47.
+                B keeps rows 44 through 47.
+                F keeps rows 44 through 45.
+                The final F keeps the lower of the two, row 44.
+
+                Start by considering the whole range, columns 0 through 7.
+                R means to take the upper half, keeping columns 4 through 7.
+                L means to take the lower half, keeping columns 4 through 5.
+                The final R keeps the upper of the two, column 5.
+
+                Every seat also has a unique seat ID: multiply the row by 8, 
+                then add the column. In this example, the seat has ID 44 * 8 + 5 = 357
+
+                BFFFBBFRRR: row 70, column 7, seat ID 567.
+                FFFBBBFRRR: row 14, column 7, seat ID 119.
+                BBFFBBFRLL: row 102, column 4, seat ID 820.
+            */
+            int rowMax = 127;
+            int rowMin = 0;
+            int colMax = 7;
+            int colMin = 0;
+            int maxId = 0;
+            var seatId = new int[817];
+            foreach (var e in input)
+            {
+                int r = FindPosition(rowMax, rowMin, e.Substring(0, 7).ToString());
+                int c = FindPosition(colMax, colMin, e.Substring(7).ToString());
+                int s = (r * 8) + c;
+                maxId = s > maxId ? s : maxId;
+                seatId[s-32]=s;
+                //Console.WriteLine($"Row: {r} Col: {c} Seat Id: {s}\r\n");
+            }
+            Console.WriteLine($"Max Seat Id: {maxId}\r\n");
+            int mySeat = Array.FindIndex(seatId, i => i == 0)+32;
+            Console.WriteLine($"My Seat Id: {mySeat}\r\n");
+            foreach (var e in seatId)
+            {
+                Console.WriteLine($"Index: {e-32} Seat Id: {e}");
+            }
+
+        }
+
+        private static void Print(int max, int min)
+        {
+            Console.WriteLine($"Range: {min} - {max}");
+        }
+
+        private static int FindPosition(int max, int min, string id)
+        {
+            if (min == max)
+            {
+                return min;
+            }
+            else if (id[0].Equals('F') || id[0].Equals('L'))
+            {
+                max = max - (int)Math.Floor((double)(max - min) / 2) - 1;
+                return FindPosition(max, min, id.Substring(1));
+            }
+            else
+            {
+                min = max - (int)Math.Ceiling((double)(max - min) / 2) + 1;
+                return FindPosition(max, min, id.Substring(1));
+            }
+        }
     }
 }
