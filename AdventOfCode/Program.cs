@@ -13,13 +13,14 @@ namespace AdventOfCode
            
             if(args.Length > 0)
             {
-                List<string> input = File.ReadAllLines(args[0]).ToList();
-                //var input = File.ReadAllText(args[0]);
-                //Console.WriteLine($"Records: {lines.Count(p => p.Equals(""))}\r\n");
-                //PrintArray(lines);
+                //List<string> input = File.ReadAllLines(args[0]).ToList();
+                var input = File.ReadAllText(args[0]);
+
                 //Day4(lines);
                 //Day4_1_2(input);
-                Day5_1(input);
+                //Day5_1(input);
+                Day6_1(input);
+                Day6_2(input);
                 //Console.WriteLine($"Resutl: {Day3(lines, 1, 1) * Day3(lines, 3, 1) * Day3(lines, 5, 1) * Day3(lines, 7, 1) * Day3(lines, 1, 2)}");
                 
             }
@@ -214,7 +215,6 @@ namespace AdventOfCode
             return rg.IsMatch(pid);
         }
 
-
         private static void Day5_1(List<string> input)
         {
             /*
@@ -288,5 +288,39 @@ namespace AdventOfCode
                 return FindPosition(max, min, id.Substring(1));
             }
         }
+
+        private static void Day6_1(string input)
+        {
+            var groups = input.Replace("\n\n", "@").Replace("\n", "").Split(new char[] { '@' }, StringSplitOptions.RemoveEmptyEntries);
+            int sum = 0;
+            foreach (var group in groups)
+            {
+                sum += group.Distinct().Count();
+            }
+            Console.WriteLine($"\r\n\r\nTotal Sum: {sum}\r\n\r\n");
+        }
+
+        private static void Day6_2(string input)
+        {
+            var groups = input.Replace("\n\n", "@").Split(new char[] { '@' }, StringSplitOptions.RemoveEmptyEntries);
+            int sum = 0;
+            var i = 0;
+            foreach (var group in groups)
+            {
+                var sub = group.Split("\n");
+                var index = new int[27];
+                i++;
+                foreach(var s in sub)
+                {
+                    foreach(var c in s)
+                    {
+                        index[c - 96] ++;
+                    }
+                }
+                sum += index.Count(i => i == sub.Length);
+            }
+            Console.WriteLine($"\r\n\r\nTotal Sum: {sum}\r\n\r\n");
+        }
+
     }
 }
