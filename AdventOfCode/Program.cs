@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AdventOfCode.Infrastructure;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,10 +9,13 @@ namespace AdventOfCode
 {
     public static class Program
     {
+        public static HashSet<string> Bags { get; set; }
+        public static TreeNode<string> Root { get; set; }
+
         static void Main(string[] args)
         {
-           
-            if(args.Length > 0)
+
+            if (args.Length > 0)
             {
                 //List<string> input = File.ReadAllLines(args[0]).ToList();
                 var input = File.ReadAllText(args[0]);
@@ -19,10 +23,12 @@ namespace AdventOfCode
                 //Day4(lines);
                 //Day4_1_2(input);
                 //Day5_1(input);
-                Day6_1(input);
-                Day6_2(input);
+                //Day6_1(input);
+                //Day6_2(input);
+                //Day7_1(input);
+                Day7_1_2(input);
                 //Console.WriteLine($"Resutl: {Day3(lines, 1, 1) * Day3(lines, 3, 1) * Day3(lines, 5, 1) * Day3(lines, 7, 1) * Day3(lines, 1, 2)}");
-                
+
             }
             else
             {
@@ -36,7 +42,7 @@ namespace AdventOfCode
             {
                 Console.WriteLine(val);
             }
-            Console.WriteLine($"Record Count: {list.Count}");
+            Console.WriteLine($"Record Count: {list.Count}\r\n");
         }
 
         private static int Day3<T>(List<T> list, int r, int d)
@@ -50,7 +56,7 @@ namespace AdventOfCode
             var treeCount = 0;
             var i = 0;
             var j = 0;
-            while(j < theHill.Length - 1)
+            while (j < theHill.Length - 1)
             {
                 i += r;
                 j += d;
@@ -127,7 +133,7 @@ namespace AdventOfCode
             var passports = input.Replace("\r", "").Replace("\n\n", "@").Split(new char[] { '@' }, StringSplitOptions.RemoveEmptyEntries);
             Console.WriteLine($"Found {passports.Length:N0} passports");
             List<Model2> ppList = new List<Model2>();
-            foreach(string passport in passports)
+            foreach (string passport in passports)
             {
                 var temp = new Model2();
                 string[] parts = passport.Split(new char[] { '\n', ' ' }, StringSplitOptions.RemoveEmptyEntries);
@@ -253,15 +259,15 @@ namespace AdventOfCode
                 int c = FindPosition(colMax, colMin, e.Substring(7).ToString());
                 int s = (r * 8) + c;
                 maxId = s > maxId ? s : maxId;
-                seatId[s-32]=s;
+                seatId[s - 32] = s;
                 //Console.WriteLine($"Row: {r} Col: {c} Seat Id: {s}\r\n");
             }
             Console.WriteLine($"Max Seat Id: {maxId}\r\n");
-            int mySeat = Array.FindIndex(seatId, i => i == 0)+32;
+            int mySeat = Array.FindIndex(seatId, i => i == 0) + 32;
             Console.WriteLine($"My Seat Id: {mySeat}\r\n");
             foreach (var e in seatId)
             {
-                Console.WriteLine($"Index: {e-32} Seat Id: {e}");
+                Console.WriteLine($"Index: {e - 32} Seat Id: {e}");
             }
 
         }
@@ -310,17 +316,183 @@ namespace AdventOfCode
                 var sub = group.Split("\n");
                 var index = new int[27];
                 i++;
-                foreach(var s in sub)
+                foreach (var s in sub)
                 {
-                    foreach(var c in s)
+                    foreach (var c in s)
                     {
-                        index[c - 96] ++;
+                        index[c - 96]++;
                     }
                 }
                 sum += index.Count(i => i == sub.Length);
             }
             Console.WriteLine($"\r\n\r\nTotal Sum: {sum}\r\n\r\n");
         }
+
+        private static void Day7_1(List<string> input)
+        {
+            var bag = "shiny gold";
+            //Bags = new HashSet<string>();
+            Root = new TreeNode<string>(bag);
+            //Bags.Add(RecRuns(input, bag));
+            //Bags.RemoveWhere(x => x.Equals(""));
+            //Console.WriteLine($"Bag Count: {Bags.Count}");
+            Root.AddChild(RecRuns(input, Root.Value));
+            var list = Root.Flatten().ToList();
+            list.Sort();
+            PrintArray(list);
+            var result = list.Where(s => !s.Equals("")).Select(s => s).Distinct().ToList();
+            PrintArray(result);
+            Console.WriteLine($"Bag Count: {result.Count}");
+        }
+
+        private static string RecRuns(List<string> input, string bag)
+        {
+            if (string.IsNullOrEmpty(bag))
+            {
+                return "";
+            }
+            else
+            {
+                var run = GetBags(input, bag);
+                //PrintArray(run);
+                foreach (var s in run)
+                {
+                    Root.AddChild(SubString(s));
+                    RecRuns(input, SubString(s));
+                }
+                return RecRuns(input, "");
+            }
+        }
+
+        private static List<string> GetBags(List<string> input, string type)
+        {
+            return input.Where(s => !s.Contains("no other bags") && (s.Substring(s.IndexOf("contain")).Contains(type))).Select(s => s).ToList();
+        }
+
+        private static string SubString(string s)
+        {
+            return !string.IsNullOrEmpty(s) ? s.Substring(0, s.IndexOf("contain") - 1) : "";
+        }
+
+        private static void Day7_1_2(string input)
+        {
+            int result = 0;
+            string[] rules = input.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            const string splitBy = " bags contain ";
+            const string bag = "shiny gold";
+            Dictionary<string, List<(string bag, int occurence)>> parentRules = new();
+            foreach (string rule in rules)
+            {
+                string[] parts = SplitBy(rule, splitBy).ToArray();
+                if (parts[1].StartsWith("no"))
+                {
+                    parentRules.Add(parts[0], new());
+                }
+                else
+                {
+                    var children = SplitBy(parts[1].Replace("bags", "bag").Replace("bag.", ""), " bag, ").ToList();
+                    var childInfo = new List<(string bag, int occurence)>();
+                    foreach (var child in children)
+                    {
+                        string[] childParts = child.TrimEnd().Split(' ');
+                        if (childParts.Length == 3)
+                        {
+                            if (int.TryParse(childParts[0], out int occurence))
+                            {
+                                childInfo.Add(($"{childParts[1]} {childParts[2]}", occurence));
+                            }
+                            else
+                            {
+                                throw new ArgumentException($"Could not parse '{childParts[0]}' as a valid number");
+                            }
+                        }
+                        else
+                        {
+                            throw new ArgumentException($"Expected 3 parts, got '{childParts.Length}' as a valid number");
+                        }
+
+                    }
+                    parentRules.Add(parts[0], childInfo);
+                }
+            }
+            Dictionary<string, List<(string bag, int occurence)>> childRules = new();
+            foreach (var key in parentRules.Keys)
+            {
+                var children = parentRules[key];
+                foreach (var child in children)
+                {
+                    if (!childRules.TryGetValue(child.bag, out var parents))
+                    {
+                        parents = new();
+                        childRules.Add(child.bag, parents);
+                    }
+                    parents.Add((key, child.occurence));
+                }
+            }
+            HashSet<string> all = new();
+            var resultInfo = CountParents((bag, 1), new HashSet<string>(), all, 1, childRules);
+            Console.WriteLine($"\r\nHighest: {resultInfo.allSeen.Count-1}, {string.Join(",", resultInfo.allSeen)}");
+            result = GetBagCount(bag, parentRules) - 1;
+            Console.WriteLine($"\r\nPart2 Result: {result}");
+        }
+
+        private static int GetBagCount(string bag, Dictionary<string, List<(string bag, int occurence)>> parentRules)
+        {
+            int result = 1;
+
+            if(parentRules.TryGetValue(bag, out var children))
+            {
+                foreach(var child in children)
+                {
+                    result += child.occurence * GetBagCount(child.bag, parentRules);
+                }
+            }
+
+            return result;
+        }
+
+        private static (int highest, HashSet<string> allSeen) CountParents((string bag, int occurence) bagInfo, HashSet<string> seen, HashSet<string> allSeen, int count, Dictionary<string, List<(string bag, int occurence)>> childRules)
+        {
+            allSeen.Add(bagInfo.bag);
+            int highest = count;
+            if (!childRules.TryGetValue(bagInfo.bag, out var children) ||  children.Count == 0)
+            {
+                //Console.WriteLine($"{count} {string.Join(",", seen)}, {bagInfo.bag}");
+            }
+            else
+            {
+                foreach (var child in children)
+                {
+                    var localSeen = new HashSet<string>(seen.Union(new string[] { bagInfo.bag }));
+                    var info = CountParents(child, localSeen, allSeen, count + 1, childRules);
+                    allSeen.UnionWith(info.allSeen);
+                    if(info.highest > highest)
+                    {
+                        highest = info.highest;
+                    }
+                }
+            }
+            return (highest, allSeen);
+        }
+
+        private static IEnumerable<string> SplitBy(string contents, string splitBy)
+        {
+            var splitLength = splitBy.Length;
+            var previousIndex = 0;
+            var ix = contents.IndexOf(splitBy);
+            while (ix >= 0)
+            {
+                yield return contents.Substring(previousIndex, ix - previousIndex);
+                previousIndex = ix + splitLength;
+                ix = contents.IndexOf(splitBy, previousIndex);
+            }
+            string remain = contents.Substring(previousIndex);
+            if (!string.IsNullOrEmpty(remain))
+            {
+                yield return remain;
+            }
+        }
+
 
     }
 }
