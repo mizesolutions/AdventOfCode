@@ -27,7 +27,8 @@ namespace AdventOfCode
                 //Day6_2(input);
                 //Day7_1(input);
                 //Day7_1_2(input);
-                Day8_1(input);
+                //Day8_1(input);
+                Day9_1(input);
                 //Console.WriteLine($"Resutl: {Day3(lines, 1, 1) * Day3(lines, 3, 1) * Day3(lines, 5, 1) * Day3(lines, 7, 1) * Day3(lines, 1, 2)}");
 
             }
@@ -45,7 +46,7 @@ namespace AdventOfCode
             }
             Console.WriteLine($"Record Count: {list.Count}\r\n");
         }
-
+        #region Day 3
         private static int Day3<T>(List<T> list, int r, int d)
         {
             var item = list.First().ToString();
@@ -114,7 +115,9 @@ namespace AdventOfCode
                        $"Pass: {Pass}\r\n";
             }
         }
+        #endregion Day 3
 
+        #region Day 4
         private static void Day4_1_2(string input)
         {
             //Console.WriteLine(input);
@@ -221,7 +224,9 @@ namespace AdventOfCode
             Regex rg = new Regex(pattern);
             return rg.IsMatch(pid);
         }
+        #endregion Day 4
 
+        #region Day 5
         private static void Day5_1(List<string> input)
         {
             /*
@@ -295,7 +300,9 @@ namespace AdventOfCode
                 return FindPosition(max, min, id.Substring(1));
             }
         }
+        #endregion Day 5
 
+        #region Day 6
         private static void Day6_1(string input)
         {
             var groups = input.Replace("\n\n", "@").Replace("\n", "").Split(new char[] { '@' }, StringSplitOptions.RemoveEmptyEntries);
@@ -328,7 +335,9 @@ namespace AdventOfCode
             }
             Console.WriteLine($"\r\n\r\nTotal Sum: {sum}\r\n\r\n");
         }
+        #endregion Day 6
 
+        #region Day 7
         private static void Day7_1(List<string> input)
         {
             var bag = "shiny gold";
@@ -476,6 +485,26 @@ namespace AdventOfCode
             return (highest, allSeen);
         }
 
+        private static IEnumerable<string> SplitBy(string contents, string splitBy)
+        {
+            var splitLength = splitBy.Length;
+            var previousIndex = 0;
+            var ix = contents.IndexOf(splitBy);
+            while (ix >= 0)
+            {
+                yield return contents.Substring(previousIndex, ix - previousIndex);
+                previousIndex = ix + splitLength;
+                ix = contents.IndexOf(splitBy, previousIndex);
+            }
+            string remain = contents.Substring(previousIndex);
+            if (!string.IsNullOrEmpty(remain))
+            {
+                yield return remain;
+            }
+        }
+        #endregion Day 7
+
+        #region Day 8
         private static void Day8_1(string input)
         {
             string[] fullSet = input.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
@@ -544,24 +573,170 @@ namespace AdventOfCode
             }
             return (tracker, acc);
         }
+        #endregion Day 8
 
-        private static IEnumerable<string> SplitBy(string contents, string splitBy)
+        #region Day 9
+        private static void Day9_1(string input)
         {
-            var splitLength = splitBy.Length;
-            var previousIndex = 0;
-            var ix = contents.IndexOf(splitBy);
-            while (ix >= 0)
+            var preamble = 25;
+            Queue<long> preamleQ = new();
+            string[] masterList = input.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            long[] longXmasList = new long[masterList.Length];
+            longXmasList = ParseLongList(masterList);
+            for(var i = 0; i < preamble; i++)
             {
-                yield return contents.Substring(previousIndex, ix - previousIndex);
-                previousIndex = ix + splitLength;
-                ix = contents.IndexOf(splitBy, previousIndex);
+                preamleQ.Enqueue(longXmasList[i]);
             }
-            string remain = contents.Substring(previousIndex);
-            if (!string.IsNullOrEmpty(remain))
+            (bool valid, long qNumber) test = new();
+            for (var ix = preamble; ix < longXmasList.Length; ix++)
             {
-                yield return remain;
+                test = IsValidNumber(preamleQ, longXmasList[ix]);
+                if (test.valid)
+                {
+                    preamleQ.Dequeue();
+                    preamleQ.Enqueue(test.qNumber);
+                } 
+                else
+                {
+                    SumIt(longXmasList, test.qNumber, ix);
+                    break;
+                }
             }
+
+
+            Console.WriteLine($"This number is invalid: {test.qNumber}");
+            Console.ReadKey();
         }
+
+        private static void SumIt(long[] list, long target, int lastIndex)
+        {
+            long sum = 552655238;
+            var ix = lastIndex - 25;
+            while (ix > 0 && sum >= 0)
+            {
+                Console.WriteLine($"Sum: {sum}");
+                sum -= list[ix];
+                if (sum < 0)
+                {
+                    break;
+                }
+                ix--;
+            }
+            Console.WriteLine($"Sum: {sum}, Last index: {ix-1}");
+        }
+
+        private static (bool valid, long qNumber) IsValidNumber(Queue<long> preambleQ, long number)
+        {
+            (bool valid, long qNumber) result = (false, 0);
+            foreach(var n in preambleQ)
+            {
+                var search = n > number ? n - number : number - n;
+                result = (preambleQ.Contains(search), number);
+                if (result.valid)
+                    break;
+            }
+            return result;
+        }
+
+        private static long[] ParseLongList(string[] list)
+        {
+            long[] temp = new long[list.Length];
+            for (var ix = 0; ix < list.Length; ix++)
+            {
+                if (long.TryParse(list[ix], out long v))
+                {
+                    temp[ix] = v;
+                }
+                else
+                {
+                    Console.WriteLine($"Could not parse {list[ix]}");
+                }
+            }
+            return temp;
+        }
+
+        #endregion Day 9
+
+        #region Day 10
+
+
+        #endregion Day 10
+
+        #region Day 11
+
+
+        #endregion Day 11
+
+        #region Day 12
+
+
+        #endregion Day 12
+
+        #region Day 13
+
+
+        #endregion Day 13
+
+        #region Day 14
+
+
+        #endregion Day 14
+
+        #region Day 15
+
+
+        #endregion Day 15
+
+        #region Day 16
+
+
+        #endregion Day 16
+
+        #region Day 17
+
+
+        #endregion Day 17
+
+        #region Day 18
+
+
+        #endregion Day 18
+
+        #region Day 19
+
+
+        #endregion Day 19
+
+        #region Day 20
+
+
+        #endregion Day 20
+
+        #region Day 21
+
+
+        #endregion Day 21
+
+        #region Day 22
+
+
+        #endregion Day 22
+
+        #region Day 23
+
+
+        #endregion Day 23
+
+        #region Day 24
+
+
+        #endregion Day 24
+
+        #region Day 25
+
+
+        #endregion Day 25
+
 
 
     }
