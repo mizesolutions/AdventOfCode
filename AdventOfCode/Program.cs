@@ -26,7 +26,8 @@ namespace AdventOfCode
                 //Day6_1(input);
                 //Day6_2(input);
                 //Day7_1(input);
-                Day7_1_2(input);
+                //Day7_1_2(input);
+                Day8_1(input);
                 //Console.WriteLine($"Resutl: {Day3(lines, 1, 1) * Day3(lines, 3, 1) * Day3(lines, 5, 1) * Day3(lines, 7, 1) * Day3(lines, 1, 2)}");
 
             }
@@ -473,6 +474,75 @@ namespace AdventOfCode
                 }
             }
             return (highest, allSeen);
+        }
+
+        private static void Day8_1(string input)
+        {
+            string[] fullSet = input.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            var acc = RunInstructions(fullSet, 0);
+            Console.WriteLine($"\r\nACC first run: {acc.acc}\r\n");
+
+            var correctedAcc = CorrectError(fullSet);
+            Console.WriteLine($"\r\nACC corrected run: {correctedAcc}\r\n");
+        }
+
+        private static int CorrectError(string[] fullSet)
+        {
+            var acc = 0;
+
+            var indexList = Enumerable.Range(0, fullSet.Length-1)
+                            .Where(i => fullSet[i].Substring(0, 3).Equals("nop") || fullSet[i].Substring(0, 3).Equals("jmp"))
+                            .ToList();
+            string[] correctedSet = new string[fullSet.Length];
+            foreach (var ixl in indexList)
+            {
+                fullSet.CopyTo(correctedSet, 0);
+                correctedSet[ixl] = fullSet[ixl].Substring(0, 3).Equals("nop") ? correctedSet[ixl].Replace("nop", "jmp") : correctedSet[ixl].Replace("jmp", "nop");
+                var tracker = RunInstructions(correctedSet, 0);
+                if(tracker.tracker.Contains((fullSet[^1], fullSet.Length - 1)))
+                {
+                    acc = tracker.acc;
+                }
+            }
+            return acc;
+        }
+
+        private static (HashSet<(string set, int index)> tracker, int acc) RunInstructions(string[] fullSet, int acc)
+        {
+            HashSet<(string set, int index)> tracker = new();
+            var ix = 0;
+            while (ix < fullSet.Length && !tracker.Contains((fullSet[ix], ix)))
+            {
+                tracker.Add((fullSet[ix], ix));
+                //Console.WriteLine($"Set: {fullSet[ix]} @ {ix}");
+                if (Int32.TryParse(fullSet[ix].Substring(4), out int j))
+                {
+                    switch (fullSet[ix].Substring(0, 3))
+                    {
+                        case "acc":
+                            acc += j;
+                            ix++;
+                            break;
+                        case "jmp":
+                            ix = ix + j;
+                            break;
+                        case "nop":
+                            ix++;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("String could not be parsed.");
+                }
+            }
+            foreach (var e in tracker)
+            {
+                Console.WriteLine($"{e.set} @ {e.index + 1}");
+            }
+            return (tracker, acc);
         }
 
         private static IEnumerable<string> SplitBy(string contents, string splitBy)
