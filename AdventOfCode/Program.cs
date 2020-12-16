@@ -1,6 +1,7 @@
 ﻿using AdventOfCode.Infrastructure;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -28,7 +29,8 @@ namespace AdventOfCode
                 //Day7_1(input);
                 //Day7_1_2(input);
                 //Day8_1(input);
-                Day9_1(input);
+                //Day9_1(input, args[0]);
+                Day10(args[0]);
                 //Console.WriteLine($"Resutl: {Day3(lines, 1, 1) * Day3(lines, 3, 1) * Day3(lines, 5, 1) * Day3(lines, 7, 1) * Day3(lines, 1, 2)}");
 
             }
@@ -576,53 +578,85 @@ namespace AdventOfCode
         #endregion Day 8
 
         #region Day 9
-        private static void Day9_1(string input)
+        private static void Day9_1(string input, string file)
         {
-            var preamble = 25;
-            Queue<long> preamleQ = new();
-            string[] masterList = input.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
-            long[] longXmasList = new long[masterList.Length];
-            longXmasList = ParseLongList(masterList);
-            for(var i = 0; i < preamble; i++)
-            {
-                preamleQ.Enqueue(longXmasList[i]);
-            }
-            (bool valid, long qNumber) test = new();
-            for (var ix = preamble; ix < longXmasList.Length; ix++)
-            {
-                test = IsValidNumber(preamleQ, longXmasList[ix]);
-                if (test.valid)
-                {
-                    preamleQ.Dequeue();
-                    preamleQ.Enqueue(test.qNumber);
-                } 
-                else
-                {
-                    SumIt(longXmasList, test.qNumber, ix);
-                    break;
-                }
-            }
-
-
-            Console.WriteLine($"This number is invalid: {test.qNumber}");
-            Console.ReadKey();
+            Execute(file);
+            //var preamble = 25;
+            //Queue<long> preambleQ = new();
+            //string[] masterList = input.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            //long[] longXmasList = new long[masterList.Length];
+            //longXmasList = ParseLongList(masterList);
+            //for(var i = 0; i < preamble; i++)
+            //{
+            //    preambleQ.Enqueue(longXmasList[i]);
+            //}
+            //(bool valid, long qNumber) test = new();
+            //for (var ix = preamble; ix < longXmasList.Length; ix++)
+            //{
+            //    test = IsValidNumber(preambleQ, longXmasList[ix]);
+            //    if (test.valid)
+            //    {
+            //        preambleQ.Dequeue();
+            //        preambleQ.Enqueue(test.qNumber);
+            //    } 
+            //    else
+            //    {
+            //        Console.WriteLine($"This number is invalid: {test.qNumber}");
+            //        FindWeakness(longXmasList, preambleQ, test.qNumber, ix);
+            //        break;
+            //    }
+            //}
         }
 
-        private static void SumIt(long[] list, long target, int lastIndex)
+        private static void FindWeakness(long[] list, Queue<long> preambleQ, long target, int lastIndex)
         {
-            long sum = 552655238;
-            var ix = lastIndex - 25;
-            while (ix > 0 && sum >= 0)
+            Queue<long> revPreambleQ = new Queue<long>(preambleQ.Reverse());
+            (bool valid, List<long> range) result = new();
+            long max = 0, min = 0;
+            for (var ix = lastIndex - 26; ix > 0; ix--)
             {
-                Console.WriteLine($"Sum: {sum}");
-                sum -= list[ix];
-                if (sum < 0)
+                revPreambleQ.Dequeue();
+                revPreambleQ.Enqueue(list[ix]);
+                result = FindSumNumbers(revPreambleQ, target);
+                if (result.valid)
                 {
+                    max = result.range.Max();
+                    min = result.range.Min();
                     break;
                 }
-                ix--;
             }
-            Console.WriteLine($"Sum: {sum}, Last index: {ix-1}");
+            var sum = max + min;
+
+            Console.WriteLine($"The weakness is: {sum}");
+        }
+
+        private static (bool valid, List<long> range) FindSumNumbers(Queue<long> preambleQ, long number)
+        {
+            bool valid = false;
+            List<long> range = new();
+            var tempQ = preambleQ.ToArray();
+
+            for (var i = 0; i < tempQ.Length; i++)
+            {
+                var ix = i;
+                var sum = tempQ[i];
+                while (ix < tempQ.Length && sum <= number)
+                {
+                    sum += tempQ[ix];
+                    ix++;
+                }
+                if (sum == number)
+                {
+                    for(var e = ix; e >= i; e--)
+                    {
+                        range.Add(tempQ[e]);
+                    }
+                    valid = true;
+                    break;
+                }
+            }
+
+            return (valid, range);
         }
 
         private static (bool valid, long qNumber) IsValidNumber(Queue<long> preambleQ, long number)
@@ -655,10 +689,80 @@ namespace AdventOfCode
             return temp;
         }
 
+        public static int numberToConsider = 25;
+        public static List<long> input;
+        public static int firstposition = numberToConsider;
+        public static long faultingNumber;
+
+        private static void Execute(string file)
+        {
+            input = File.ReadAllLines(file).Select(r => long.Parse(r)).ToList();
+
+            //Added a imer just for fun
+            var timer = new Stopwatch();
+            timer.Start();
+
+            while (true)
+            {
+                faultingNumber = input[firstposition];
+                if (!SumFound(faultingNumber, firstposition))
+                    break;
+                firstposition++;
+            }
+            //Part 2:
+            var answerPart2 = FindSumUpToAnswer();
+
+            timer.Stop();
+            Console.WriteLine($"Part1 answer:  {faultingNumber}");
+            Console.WriteLine($"Part2 answer:  {answerPart2}");
+            Console.WriteLine($"Executed in: {timer.ElapsedMilliseconds} milliseconds");
+        }
+
+        private static long FindSumUpToAnswer()
+        {
+            firstposition = 0;
+            var secondPosition = 1;
+
+
+            while (true)
+            {
+                (int start, int end)range = (firstposition, secondPosition -firstposition);
+                var listToCheck = input.GetRange(range.start, range.end);
+                var rangeResult = listToCheck.Sum();
+                if (rangeResult == faultingNumber)
+                {
+                    return listToCheck.Min() + listToCheck.Max();
+                }
+                //By adding to either the first or second position a window is created and results are re-used instead of creating a new list every time
+                if (rangeResult < faultingNumber)
+                    secondPosition++;
+                else
+                    firstposition++;
+            }
+        }
+
+        private static bool SumFound(long nextNumberToCheck, int position)
+        {
+            var workingList = input.Skip(position - numberToConsider).Take(numberToConsider).ToList();
+            workingList.Sort();
+            for (int i = 0; i < numberToConsider - 1; i++)
+            {
+                var valueNeeded = nextNumberToCheck - workingList[i];
+                var result = workingList.BinarySearch(valueNeeded);
+                if (result >= 0)
+                    return true;
+            }
+            return false;
+        }
+
         #endregion Day 9
 
         #region Day 10
+        private static void Day10(string input)
+        {
+            List<int> adaptors = File.ReadAllLines(input).Select(r => int.Parse(r)).ToList();
 
+        }
 
         #endregion Day 10
 
