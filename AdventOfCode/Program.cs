@@ -12,7 +12,6 @@ namespace AdventOfCode
     {
         public static HashSet<string> Bags { get; set; }
         public static TreeNode<string> Root { get; set; }
-        public static TreeNode<int> Adaptors { get; set; }
 
         static void Main(string[] args)
         {
@@ -31,7 +30,8 @@ namespace AdventOfCode
                 //Day7_1_2(input);
                 //Day8_1(input);
                 //Day9_1(input, args[0]);
-                Day10(args[0]);
+                //Day10(args[0]);
+                Day11(input);
                 //Console.WriteLine($"Resutl: {Day3(lines, 1, 1) * Day3(lines, 3, 1) * Day3(lines, 5, 1) * Day3(lines, 7, 1) * Day3(lines, 1, 2)}");
 
             }
@@ -49,6 +49,7 @@ namespace AdventOfCode
             }
             Console.WriteLine($"Record Count: {list.Count}\r\n");
         }
+
         #region Day 3
         private static int Day3<T>(List<T> list, int r, int d)
         {
@@ -842,12 +843,321 @@ namespace AdventOfCode
             Console.WriteLine($"Combinations: {totalCombinations}");
         }
 
-
-
         #endregion Day 10
 
         #region Day 11
+        private static void Day11(string input)
+        {
+            /*  
+                L.LL.LL.LL
+                LLLLLLL.LL
+                L.L.L..L..
+                LLLL.LL.LL
+                L.LL.LL.LL
+                L.LLLLL.LL
+                ..L.L.....
+                LLLLLLLLLL
+                L.LLLLLL.L
+                L.LLLLL.LL
+                
+                All decisions are based on the number of occupied seats adjacent to a given seat 
+                (one of the eight positions immediately up, down, left, right, or diagonal from the seat).
+                The following rules are applied to every seat simultaneously:
+                   - If a seat is empty (L) and there are no occupied seats adjacent to it, the seat becomes occupied.
+                   - If a seat is occupied (#) and four or more seats adjacent to it are also occupied, the seat becomes empty.
+                   - Otherwise, the seat's state does not change.
 
+                Floor (.) never changes; seats don't move, and nobody sits on the floor.
+            */
+            string[] seats = input.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            List<List<Seat>> seatMap = new();
+            CreateSeatMap(seats, seatMap);
+            Console.WriteLine($"{seatMap[0][0]}");
+            bool changed = true;
+            while (changed)
+            {
+                Console.WriteLine("Running Rules and Checking for Changed.");
+                foreach (var row in seatMap)
+                {
+                    foreach (var seat in row)
+                    {
+                        //rules for change - trans = change
+                        if(!seat.CurrentState.Equals(States.Floor))
+                        {
+                            int emptyCount = 0;
+                            foreach (var adjSeat in seat.AdjacentSeats)
+                            {
+                                if (seatMap[adjSeat.row][adjSeat.col].CurrentState.Equals(States.Empty))
+                                    emptyCount++;
+                            }
+                            if (seat.CurrentState.Equals(States.Empty))
+                            {
+                                if (emptyCount == seat.AdjacentSeats.Count)
+                                {
+                                    seat.TransitionState = States.Occupied;
+                                }
+                            } 
+                            else
+                            {
+                                if (seat.AdjacentSeats.Count - emptyCount >= 5)
+                                {
+                                    seat.TransitionState = States.Empty;
+                                }
+                            }
+                        }
+                    }
+                }
+                foreach (var row in seatMap)
+                {
+                    foreach (var seat in row)
+                    {
+                        // prev = cur
+                        // cur = trans
+                        if (!seat.CurrentState.Equals(States.Floor))
+                        {
+                            seat.PreviousState = seat.CurrentState;
+                            if (!seat.TransitionState.Equals(seat.CurrentState))
+                            {
+                                seat.CurrentState = seat.TransitionState;
+                            }
+                            seat.IsChanged();
+                        }
+                    }
+                }
+                int chgCount = 0;
+                foreach (var row in seatMap)
+                {
+                    chgCount += row.Any(x => x.Changed) ? 1 : 0;
+                }
+                changed = chgCount > 0;
+            }
+
+            int occupied = 0;
+            foreach (var row in seatMap)
+            {
+                occupied += row.Where(s => s.CurrentState.Equals(States.Occupied)).Select(s => s).Count();
+            }
+            
+            Console.WriteLine($"\r\nOccupied Seats: {occupied}");
+        }
+
+        private static void CreateSeatMap(string[] seats, List<List<Seat>> seatMap)
+        {
+            for (int ir = 0; ir < seats.Length; ir++)
+            {
+                var ic = 0;
+                List<Seat> tList = new();
+                while (ic < seats[0].Length)
+                {
+                    var seat = seats[ir].ElementAt(ic);
+                    var temp = new Seat();
+                    switch (seat)
+                    {
+                        case 'L':
+                            temp.CurrentState = States.Empty;
+                            temp.PreviousState = temp.CurrentState;
+                            temp.TransitionState = temp.PreviousState;
+                            break;
+                        case '.':
+                            temp.CurrentState = States.Floor;
+                            temp.PreviousState = temp.CurrentState;
+                            temp.TransitionState = temp.PreviousState;
+                            break;
+                        default:
+                            break;
+                    }
+                    tList.Add(temp);
+                    ic++;
+                }
+                seatMap.Add(tList);
+            }
+
+            for (int ir = 0; ir < seatMap.Count; ir++)
+            {
+                var ic = 0;
+                while (ic < seatMap[0].Count)
+                {
+                    if (!seatMap[ir][ic].CurrentState.Equals(States.Floor))
+                    {
+                        seatMap[ir][ic].AdjacentSeats = CountSeats((ir, ic), seatMap);
+                    }
+                    ic++;
+                }
+            }
+        }
+
+        private static List<(int row, int col)> CountSeats((int row, int col) position, List<List<Seat>> seatMap)
+        {
+            List<(int row, int col)> temp = new();
+            //Up
+            if (position.row > 0)
+            {
+                //Up Left
+                if (position.col > 0)
+                {
+                    if (!seatMap[position.row - 1][position.col - 1].CurrentState.Equals(States.Floor))
+                    {
+                        temp.Add((position.row - 1, position.col - 1));
+                    }
+                    else
+                    {
+                        for (int ir = position.row - 2, ic = position.col - 2; ir >= 0 && ic >= 0; ir--, ic--)
+                        {
+                            if (!seatMap[ir][ic].CurrentState.Equals(States.Floor))
+                            {
+                                temp.Add((ir, ic));
+                                ir = ic = -1;
+                            }
+                        }
+                    }
+                }
+                    
+                //Up
+                if (!seatMap[position.row - 1][position.col].CurrentState.Equals(States.Floor))
+                {
+                    temp.Add((position.row - 1, position.col));
+                }
+                else
+                {
+                    for (int ir = position.row - 2; ir >= 0; ir--)
+                    {
+                        if (!seatMap[ir][position.col].CurrentState.Equals(States.Floor))
+                        {
+                            temp.Add((ir, position.col));
+                            ir = -1;
+                        }
+                    }
+                }
+
+                //Up Right
+                if (position.col < seatMap[position.row].Count - 1)
+                {
+                    if (!seatMap[position.row - 1][position.col + 1].CurrentState.Equals(States.Floor))
+                    {
+                        temp.Add((position.row - 1, position.col + 1));
+                    }
+                    else
+                    {
+                        for (int ir = position.row - 2, ic = position.col + 2; ir >= 0 && ic < seatMap[position.row].Count; ir--, ic++)
+                        {
+                            if (!seatMap[ir][ic].CurrentState.Equals(States.Floor))
+                            {
+                                temp.Add((ir, ic));
+                                ir = -1; 
+                                ic = seatMap.Count + seatMap[position.row].Count;
+                            }
+                        }
+                    }
+                }
+                    
+
+            }
+
+            //Same Row - Left
+            if (position.col > 0)
+            {
+                if (!seatMap[position.row][position.col - 1].CurrentState.Equals(States.Floor))
+                {
+                    temp.Add((position.row, position.col - 1));
+                }
+                else
+                {
+                    for (int ic = position.col - 2; ic >= 0; ic--)
+                    {
+                        if (!seatMap[position.row][ic].CurrentState.Equals(States.Floor))
+                        {
+                            temp.Add((position.row, ic));
+                            ic = -1;
+                        }
+                    }
+                }
+            }
+
+            //Same Row - Right
+            if (position.col < seatMap[position.row].Count - 1)
+            {
+                if (!seatMap[position.row][position.col + 1].CurrentState.Equals(States.Floor))
+                {
+                    temp.Add((position.row, position.col + 1));
+                }
+                else
+                {
+                    for (int ic = position.col + 2; ic < seatMap[position.row].Count; ic++)
+                    {
+                        if (!seatMap[position.row][ic].CurrentState.Equals(States.Floor))
+                        {
+                            temp.Add((position.row, ic));
+                            ic = seatMap.Count + seatMap[position.row].Count;
+                        }
+                    }
+                }
+            }
+                
+            //Down
+            if (position.row < seatMap.Count - 1)
+            {
+                //Down Left
+                if (position.col > 0)
+                {
+                    if (!seatMap[position.row + 1][position.col - 1].CurrentState.Equals(States.Floor))
+                    {
+                        temp.Add((position.row + 1, position.col - 1));
+                    }
+                    else
+                    {
+                        for (int ir = position.row + 2, ic = position.col - 2; ir < seatMap.Count && ic >= 0; ir++, ic--)
+                        {
+                            if (!seatMap[ir][ic].CurrentState.Equals(States.Floor))
+                            {
+                                temp.Add((ir, ic));
+                                ir = seatMap.Count + seatMap[position.row].Count; 
+                                ic = -1;
+                            }
+                        }
+                    }
+                }
+                    
+                //Down
+                if(!seatMap[position.row + 1][position.col].CurrentState.Equals(States.Floor))
+                {
+                    temp.Add((position.row + 1, position.col));
+                }
+                else
+                {
+                    for (int ir = position.row + 2; ir < seatMap.Count; ir++)
+                    {
+                        if (!seatMap[ir][position.col].CurrentState.Equals(States.Floor))
+                        {
+                            temp.Add((ir, position.col));
+                            ir = seatMap.Count + seatMap[position.row].Count;
+                        }
+                    }
+                }
+
+                //Down Right
+                if (position.col < seatMap[position.row].Count - 1)
+                {
+                    if (!seatMap[position.row + 1][position.col + 1].CurrentState.Equals(States.Floor))
+                    {
+                        temp.Add((position.row + 1, position.col + 1));
+                    }
+                    else
+                    {
+                        for (int ir = position.row + 2, ic = position.col + 2; ir < seatMap.Count && ic < seatMap[ir].Count; ir++, ic++)
+                        {
+                            if (!seatMap[ir][ic].CurrentState.Equals(States.Floor))
+                            {
+                                temp.Add((ir, ic));
+                                ir = seatMap.Count + seatMap[position.row].Count;
+                                ic = seatMap.Count + ir;
+                            }
+                        }
+                    }
+                }
+                    
+            }
+            return temp;
+        }
 
         #endregion Day 11
 
