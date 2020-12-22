@@ -20,6 +20,7 @@ namespace AdventOfCode
             {
                 //List<string> input = File.ReadAllLines(args[0]).ToList();
                 var input = File.ReadAllText(args[0]);
+                string[] splitInput = input.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
                 //Day4(lines);
                 //Day4_1_2(input);
@@ -31,7 +32,8 @@ namespace AdventOfCode
                 //Day8_1(input);
                 //Day9_1(input, args[0]);
                 //Day10(args[0]);
-                Day11(input);
+                //Day11(input);
+                Day12(splitInput);
                 //Console.WriteLine($"Resutl: {Day3(lines, 1, 1) * Day3(lines, 3, 1) * Day3(lines, 5, 1) * Day3(lines, 7, 1) * Day3(lines, 1, 2)}");
 
             }
@@ -1163,6 +1165,85 @@ namespace AdventOfCode
 
         #region Day 12
 
+        private static void Day12(string[] input)
+        {
+            List<(string direction, int value)> instructions = new();
+            (int x, int y) compass = (0, 0);
+            (int x, int y) waypoint = (10, 1);
+            foreach (var e in input)
+            {
+                var direction = e.Substring(0,1);
+                var value = int.Parse(e.Substring(1));
+                instructions.Add((direction, value));
+            }
+            
+            foreach (var ins in instructions)
+            {
+                Console.WriteLine($"Input: {ins.direction}{ins.value}");
+                string dir = ins.direction.ToLower();
+                if (dir.Equals("f"))
+                {
+                    compass.x += waypoint.x * ins.value;
+                    compass.y += waypoint.y * ins.value;
+                    Console.WriteLine($"Compass: ({compass.x}, {compass.y})");
+                }
+                switch (dir)
+                {
+                    case "n":
+                        waypoint.y += ins.value;
+                        break;
+                    case "e":
+                        waypoint.x += ins.value;
+                        break;
+                    case "s":
+                        waypoint.y -= ins.value;
+                        break;
+                    case "w":
+                        waypoint.x -= ins.value;
+                        break;
+                    case "l":
+                    case "r":
+                        waypoint = SwitchDirection(waypoint, dir, ins.value);
+                        break;
+                    default:
+                        break;
+                }
+                Console.WriteLine($"Waypoint: ({waypoint.x}, {waypoint.y})");
+            }
+
+            Console.WriteLine($"Manhattan distance: {Math.Abs(compass.x) + Math.Abs(compass.y)}");
+        }
+
+        private static (int x, int y) SwitchDirection((int x, int y) waypoint, string turnDir, int degree)
+        {
+            (int x, int y) dir = waypoint;
+            (int x, int y) point = new();
+            point = RotateCoords(waypoint, turnDir, degree);
+            dir.x = point.x;
+            dir.y = point.y;
+            return dir;
+        }
+
+        private static (int x, int y) RotateCoords((int x, int y) point, string turn, int degree)
+        {
+            int newX, newY;
+            if (turn.Equals("l") && degree == 90 || turn.Equals("r") && degree == 270)
+            {
+                newX = point.y *-1;
+                newY = point.x;
+            }
+            else if (turn.Equals("l") && degree == 270 || turn.Equals("r") && degree == 90)
+            {
+                newX = point.y;
+                newY = point.x * -1;
+            }
+            else
+            {
+                newX = point.x * -1;
+                newY = point.y * -1;
+            }
+            return (newX, newY);
+        }
 
         #endregion Day 12
 
