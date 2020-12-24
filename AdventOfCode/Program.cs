@@ -33,7 +33,8 @@ namespace AdventOfCode
                 //Day9_1(input, args[0]);
                 //Day10(args[0]);
                 //Day11(input);
-                Day12(splitInput);
+                //Day12(splitInput);
+                Day13(splitInput);
                 //Console.WriteLine($"Resutl: {Day3(lines, 1, 1) * Day3(lines, 3, 1) * Day3(lines, 5, 1) * Day3(lines, 7, 1) * Day3(lines, 1, 2)}");
 
             }
@@ -1248,7 +1249,42 @@ namespace AdventOfCode
         #endregion Day 12
 
         #region Day 13
-
+        private static void Day13(string[] input)
+        {
+            var departTime = int.Parse(input[0]);
+            List<int> buses = new();
+            List<(int bus, int time, int diff, int result)> schedules = new();
+            var temp = input[1].Split(',', StringSplitOptions.RemoveEmptyEntries);
+            foreach (var e in temp)
+            {
+                if (!e.ToLower().Equals("x"))
+                {
+                    buses.Add(int.Parse(e));
+                }
+                else
+                {
+                    buses.Add(0);
+                }
+            }
+            foreach (var bus in buses)
+            {
+                if(bus > 0)
+                {
+                    int i = 0;
+                    while ((departTime + i) % bus != 0)
+                    {
+                        i++;
+                    }
+                    schedules.Add((bus, departTime + i, i, (bus * i)));
+                }
+                else
+                {
+                    schedules.Add((bus, bus, 999999999, 0));
+                }
+            }
+            var sortedSchedules = schedules.OrderBy(o => o.diff).ToList();
+            Console.WriteLine($"Result: {sortedSchedules.First().result}");
+        }
 
         #endregion Day 13
 
