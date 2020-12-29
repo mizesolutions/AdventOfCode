@@ -1283,7 +1283,65 @@ namespace AdventOfCode
                 }
             }
             var sortedSchedules = schedules.OrderBy(o => o.diff).ToList();
-            Console.WriteLine($"Result: {sortedSchedules.First().result}");
+            Console.WriteLine($"First Result: {sortedSchedules.First().result}\r\n");
+            Day13_2(buses);
+        }
+
+        private static void Day13_2(List<int> buses)
+        {
+            List<Schedule> schedules = new();
+            bool found = false;
+            long time = 100000000000000;
+            foreach (var b in buses)
+            {
+                var temp = new Schedule()
+                {
+                    Bus = b,
+                    Time = time,
+                    Result = b != 0 ? ModIsZero(time, b) : false
+                };
+                schedules.Add(temp);
+            }
+            while (!found)
+            {
+                foreach (var s in schedules)
+                {
+                    if (s.Bus != 0)
+                    {
+                        s.Time = time;
+                        var index = schedules.IndexOf(s);
+                        s.Result = ModIsZero(s.Time + index, s.Bus);
+                    }
+                }
+                found = schedules.TrueForAll(s => s.Result);
+                if (schedules.First().Result && schedules[schedules.Count-1].Result)
+                {
+                    var product = schedules.Where(b => b.Result).Select(b => b.Bus).ToList();
+                    var p = 1;
+                    foreach (var b in product)
+                    {
+                        p = p * b;
+                    }
+                    time += p;
+                }
+                else if (schedules.First().Result)
+                {
+                    time += schedules.First().Bus;
+                } 
+                else
+                {
+                    time++;
+                }
+                
+                Console.Write($"\rTime: {time}                               {DateTime.Now}                            ");
+            }
+
+            Console.WriteLine($"Second Result: {time - buses.Count}");
+        }
+
+        private static bool ModIsZero(long number, int divisor)
+        {
+            return number % divisor == 0;
         }
 
         #endregion Day 13
