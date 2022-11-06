@@ -1,0 +1,24 @@
+{
+  "profiles": {
+    "WSL": {
+      "commandName": "WSL2",
+      "distributionName": ""
+    },
+    "Day02": {
+      "commandName": "Project",
+      "commandLineArgs": "day02"
+    },
+    "Day01": {
+      "commandName": "Project",
+      "commandLineArgs": "day01"
+    },
+    "Day03": {
+      "commandName": "Project",
+      "commandLineArgs": "day03"
+    },
+    "Day04": {
+      "commandName": "Project",
+      "commandLineArgs": "day04"
+    }
+  }
+}
