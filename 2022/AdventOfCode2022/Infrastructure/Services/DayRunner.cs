@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using AdventOfCode2022.Days.Day00;
+using AdventOfCode2022.Days.Day01;
+using System.Collections.Generic;
 
 namespace AdventOfCode2022.Infrastructure.Services
 {
@@ -20,9 +22,6 @@ namespace AdventOfCode2022.Infrastructure.Services
             DayRun = new Dictionary<string, BaseDay>()
             {
                 { "day01", new Day01("day01", IsInput)},
-                { "day02", new Day02("day02", IsInput)},
-                { "day03", new Day03("day03", IsInput)},
-                { "day04", new Day04("day04", IsInput)}
             };
         }
 

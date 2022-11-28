@@ -34,7 +34,7 @@ namespace AdventOfCode2022.Days.Day00
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
-        public void PrintCurrentMethod()
+        public static void PrintCurrentMethod()
         {
             var st = new StackTrace();
             var sf = st.GetFrame(1);
@@ -49,7 +49,7 @@ namespace AdventOfCode2022.Days.Day00
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
-        public void PrintResults(int results)
+        public static void PrintResults(int results)
         {
             Console.WriteLine($"      Result: {results}\r\n");
         }
