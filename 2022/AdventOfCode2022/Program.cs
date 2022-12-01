@@ -25,9 +25,7 @@ namespace AdventOfCode2022
                 {
                     var _dayrunner = new DayRunner(day, isInput);
                     var _day = _dayrunner.RunDay();
-                    _day.PrintCurrentClass();
-                    _day.PuzzleOne();
-                    _day.PuzzleTwo();
+                    _day.RunPuzzles();
                     return 1;
                 } catch (Exception ex)
                 {

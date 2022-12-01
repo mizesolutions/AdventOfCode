@@ -1,13 +1,13 @@
 ﻿using AdventOfCode2022.Infrastructure.Services;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System;
 
 namespace AdventOfCode2022.Days.Day00
 {
-    public class BaseDay
+    public abstract class BaseDay
     {
         public RenderInput Input { get; set; }
         public List<string> FileInput { get; set; }
@@ -32,6 +32,16 @@ namespace AdventOfCode2022.Days.Day00
                 }
             }
         }
+
+        public void RunPuzzles()
+        {
+            PrintCurrentClass();
+            PuzzleOne();
+            PuzzleTwo();
+        }
+
+        public abstract void PuzzleOne();
+        public abstract void PuzzleTwo();
 
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static void PrintCurrentMethod()
