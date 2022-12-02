@@ -1,5 +1,4 @@
-﻿
-using AdventOfCode2022.Infrastructure.Services;
+﻿using AdventOfCode2022.Infrastructure.Services;
 
 namespace AdventOfCode2022
 {

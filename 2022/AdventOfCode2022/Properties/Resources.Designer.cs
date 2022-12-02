@@ -22,7 +22,7 @@ namespace AdventOfCode2022.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace AdventOfCode2022.Properties {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("AdventOfCode2022.Properties.Resources", typeof(Resources).Assembly);
@@ -51,7 +51,7 @@ namespace AdventOfCode2022.Properties {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -61,38 +61,20 @@ namespace AdventOfCode2022.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to C:\source\repos\AdventOfCode\2021\AdventOfCode2021\Infrastructure\Input\day01.txt.
+        ///   Looks up a localized string similar to C:\source\rep4\AdventOfCode\2022\AdventOfCode2022\Infrastructure\Input\day01.txt.
         /// </summary>
-        internal static string day01 {
+        public static string day01 {
             get {
                 return ResourceManager.GetString("day01", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to C:\source\repos\AdventOfCode\2021\AdventOfCode2021\Infrastructure\Input\day02.txt.
+        ///   Looks up a localized string similar to C:\source\rep4\AdventOfCode\2022\AdventOfCode2022\Infrastructure\Input\day02.txt.
         /// </summary>
-        internal static string day02 {
+        public static string day02 {
             get {
                 return ResourceManager.GetString("day02", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to C:\source\repos\AdventOfCode\2021\AdventOfCode2021\Infrastructure\Input\day03.txt.
-        /// </summary>
-        internal static string day03 {
-            get {
-                return ResourceManager.GetString("day03", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to C:\source\repos\AdventOfCode\2021\AdventOfCode2021\Infrastructure\Input\day04.txt.
-        /// </summary>
-        internal static string day04 {
-            get {
-                return ResourceManager.GetString("day04", resourceCulture);
             }
         }
     }
