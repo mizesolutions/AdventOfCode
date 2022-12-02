@@ -118,6 +118,9 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="day01" xml:space="preserve">
-    <value>C:\source\repos\AdventOfCode\2022\AdventOfCode2022\Infrastructure\Input\day01.txt</value>
+    <value>C:\source\rep4\AdventOfCode\2022\AdventOfCode2022\Infrastructure\Input\day01.txt</value>
+  </data>
+  <data name="day02" xml:space="preserve">
+    <value>C:\source\rep4\AdventOfCode\2022\AdventOfCode2022\Infrastructure\Input\day02.txt</value>
   </data>
 </root>

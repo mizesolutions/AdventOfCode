@@ -5,7 +5,7 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System;
 
-namespace AdventOfCode2022.Days.Day00
+namespace AdventOfCode2022.Days
 {
     public abstract class BaseDay
     {
@@ -55,7 +55,7 @@ namespace AdventOfCode2022.Days.Day00
         [MethodImpl(MethodImplOptions.NoInlining)]
         public void PrintCurrentClass()
         {
-            Console.WriteLine($"--==<  {this.GetType().Name}  >==--");
+            Console.WriteLine($"--==<  {GetType().Name}  >==--");
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]

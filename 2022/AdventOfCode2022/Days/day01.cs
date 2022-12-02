@@ -1,11 +1,10 @@
-﻿using AdventOfCode2022.Days.Day00;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AdventOfCode2022.Days.Day01
+namespace AdventOfCode2022.Days
 {
     public class Day01 : BaseDay
     {

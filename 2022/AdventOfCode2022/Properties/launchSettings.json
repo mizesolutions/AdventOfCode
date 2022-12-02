@@ -8,6 +8,10 @@
     "AOC-2022-Day01": {
       "commandName": "Project",
       "commandLineArgs": "day01"
+    },
+    "AOC-2022-Day02": {
+      "commandName": "Project",
+      "commandLineArgs": "day02"
     }
   }
 }
