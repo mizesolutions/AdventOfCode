@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace AdventOfCode2022.Properties {
+namespace AdventOfCode2019.Properties {
     using System;
     
     
@@ -22,7 +22,7 @@ namespace AdventOfCode2022.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class Resources {
+    internal class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,10 +36,10 @@ namespace AdventOfCode2022.Properties {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Resources.ResourceManager ResourceManager {
+        internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("AdventOfCode2022.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("AdventOfCode2019.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -51,7 +51,7 @@ namespace AdventOfCode2022.Properties {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Globalization.CultureInfo Culture {
+        internal static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace AdventOfCode2022.Properties {
         /// <summary>
         ///   Looks up a localized string similar to .\Infrastructure\Input\day01.txt.
         /// </summary>
-        public static string day01 {
+        internal static string day01 {
             get {
                 return ResourceManager.GetString("day01", resourceCulture);
             }
@@ -72,27 +72,9 @@ namespace AdventOfCode2022.Properties {
         /// <summary>
         ///   Looks up a localized string similar to .\Infrastructure\Input\day02.txt.
         /// </summary>
-        public static string day02 {
+        internal static string day02 {
             get {
                 return ResourceManager.GetString("day02", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to .\Infrastructure\Input\day03.txt.
-        /// </summary>
-        public static string day03 {
-            get {
-                return ResourceManager.GetString("day03", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to .\Infrastructure\Input\day04.txt.
-        /// </summary>
-        public static string day04 {
-            get {
-                return ResourceManager.GetString("day04", resourceCulture);
             }
         }
     }
