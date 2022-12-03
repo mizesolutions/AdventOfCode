@@ -1,7 +1,7 @@
-﻿using AdventOfCode2022.Days;
+﻿using AdventOfCode2019.Days;
 using System.Collections.Generic;
 
-namespace AdventOfCode2022.Infrastructure.Services
+namespace AdventOfCode2019.Infrastructure.Services
 {
     public class DayRunner
     {
@@ -22,8 +22,6 @@ namespace AdventOfCode2022.Infrastructure.Services
             {
                 { "day01", new Day01("day01", IsInput)},
                 { "day02", new Day02("day02", IsInput)},
-                { "day03", new Day03("day03", IsInput)},
-                { "day04", new Day04("day04", IsInput)},
             };
         }
 

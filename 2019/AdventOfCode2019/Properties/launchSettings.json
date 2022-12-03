@@ -5,21 +5,13 @@
       "environmentVariables": {},
       "distributionName": ""
     },
-    "AOC-2022-Day01": {
+    "AOC-2019-Day01": {
       "commandName": "Project",
       "commandLineArgs": "day01"
     },
-    "AOC-2022-Day02": {
+    "AOC-2019-Day02": {
       "commandName": "Project",
       "commandLineArgs": "day02"
-    },
-    "AOC-2022-Day03": {
-      "commandName": "Project",
-      "commandLineArgs": "day03"
-    },
-    "AOC-2022-Day04": {
-      "commandName": "Project",
-      "commandLineArgs": "day04"
     }
   }
 }

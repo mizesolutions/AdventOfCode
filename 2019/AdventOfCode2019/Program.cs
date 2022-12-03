@@ -1,6 +1,6 @@
-﻿using AdventOfCode2022.Infrastructure.Services;
+﻿using AdventOfCode2019.Infrastructure.Services;
 
-namespace AdventOfCode2022
+namespace AdventOfCode2019
 {
     public class Program
     {
@@ -26,7 +26,8 @@ namespace AdventOfCode2022
                     var _day = _dayrunner.RunDay();
                     _day.RunPuzzles();
                     return 1;
-                } catch (Exception ex)
+                }
+                catch (Exception ex)
                 {
                     Console.WriteLine($"Error: {ex.Message}");
                     return 0;
