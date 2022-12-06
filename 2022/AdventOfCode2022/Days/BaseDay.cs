@@ -59,7 +59,7 @@ namespace AdventOfCode2022.Days
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
-        public static void PrintResults(int results)
+        public static void PrintResults<T>(T results)
         {
             Console.WriteLine($"      Result: {results}\r\n");
         }
