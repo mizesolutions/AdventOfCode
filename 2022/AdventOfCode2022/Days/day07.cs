@@ -10,11 +10,15 @@ namespace AdventOfCode2022.Days
     {
         public Node<Data> Root { get; set; }
         public long LongResult1 { get; set; }
+        public long LongResult2 { get; set; }
+        public List<Node<Data>> DirIndex { get; set; }
 
         public Day07 (string day, bool hasInput) : base(day, hasInput)
         {
             Root = new( new Data(""), null!);
             LongResult1 = 0;
+            LongResult2 = 0;
+            DirIndex = new();
         }
 
         public override void PuzzleOne()
@@ -28,7 +32,11 @@ namespace AdventOfCode2022.Days
         public override void PuzzleTwo()
         {
             PrintCurrentMethod();
-            PrintResults(Result2);
+            _ = MapDirSizes(Root);
+            List<Node<Data>> DirIndexSorted = DirIndex.OrderBy(x => x.Data.Size).ToList();
+            long freeSpace = 30000000 - (70000000 - Root.Data.Size);
+            LongResult2 = DirIndexSorted.SkipWhile(p => p.Data.Size <= freeSpace).First().Data.Size;
+            PrintResults(LongResult2);
         }
 
         private void BuildDirList()
@@ -111,6 +119,20 @@ namespace AdventOfCode2022.Days
                 sum = SumDirSizesBySize(node, max, sum);
             }
             return p.Data.Size <= max ? sum += p.Data.Size : sum;
+        }
+
+        private int MapDirSizes(Node<Data> p)
+        {
+            if (p.Children.Count == 0)
+            {
+                return 0;
+            }
+            DirIndex.Add(p);
+            foreach (Node<Data> node in p.Children)
+            {
+                MapDirSizes(node);
+            }
+            return 1;
         }
     }
 
