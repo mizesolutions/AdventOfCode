@@ -141,4 +141,7 @@
   <data name="day08" xml:space="preserve">
     <value>.\Infrastructure\Input\day08.txt</value>
   </data>
+  <data name="day09" xml:space="preserve">
+    <value>.\Infrastructure\Input\day09.txt</value>
+  </data>
 </root>
