@@ -28,6 +28,7 @@ namespace AdventOfCode2022.Infrastructure.Services
                 { "day06", new Day06("day06", IsInput)},
                 { "day07", new Day07("day07", IsInput)},
                 { "day08", new Day08("day08", IsInput)},
+                { "day09", new Day09("day09", IsInput)},
             };
         }
 
