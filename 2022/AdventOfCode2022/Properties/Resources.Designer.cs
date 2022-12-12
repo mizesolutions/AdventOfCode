@@ -131,5 +131,14 @@ namespace AdventOfCode2022.Properties {
                 return ResourceManager.GetString("day08", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .\Infrastructure\Input\day09.txt.
+        /// </summary>
+        public static string day09 {
+            get {
+                return ResourceManager.GetString("day09", resourceCulture);
+            }
+        }
     }
 }
