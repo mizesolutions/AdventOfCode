@@ -1,7 +1,7 @@
-﻿using AdventOfCode2023.Infrastructure.Services;
+﻿using AdventOfCode2024.Infrastructure.Services;
 using System.Diagnostics;
 
-namespace AdventOfCode2023
+namespace AdventOfCode2024
 {
     public class Program
     {

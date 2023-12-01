@@ -1,6 +1,6 @@
-﻿using AdventOfCode2023.Properties;
+﻿using AdventOfCode2024.Properties;
 
-namespace AdventOfCode2023.Infrastructure.Services
+namespace AdventOfCode2024.Infrastructure.Services
 {
     public class RenderInput
     {
