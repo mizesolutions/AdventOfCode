@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AdventOfCode2023.Days
+﻿namespace AdventOfCode2024.Days
 {
-    public class Day03 : BaseDay
+    public class Day01 : BaseDay
     {
 
-        public Day03(string day, bool hasInput) : base(day, hasInput)
+        public Day01(string day, bool hasInput) : base(day, hasInput)
         {
         }
 

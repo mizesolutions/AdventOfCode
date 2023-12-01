@@ -1,15 +1,15 @@
-﻿using AdventOfCode2023.Infrastructure.Services;
+﻿using AdventOfCode2024.Infrastructure.Services;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
-namespace AdventOfCode2023.Days
+namespace AdventOfCode2024.Days
 {
     public abstract class BaseDay
     {
         public RenderInput Input { get; set; }
         public List<string> FileInput { get; set; }
-        public Int64 Result1 { get; set; }
-        public Int64 Result2 { get; set; }
+        public int Result1 { get; set; }
+        public int Result2 { get; set; }
 
         public BaseDay(string day, bool hasInput)
         {
