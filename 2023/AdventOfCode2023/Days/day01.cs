@@ -113,57 +113,49 @@
                                 case "o":
                                     if (s.Substring(i).Length > 2 && s[i + 1].ToString().Equals("n") && s[i + 2].ToString().Equals("e"))
                                     {
-                                        tempString = Digits.GetValueOrDefault("one");
-                                        i += 2;
+                                        tempString = "1";
                                     }
                                     break;
                                 case "t":
                                     if (s.Substring(i).Length > 2 && s[i + 1].ToString().Equals("w") && s[i + 2].ToString().Equals("o"))
                                     {
-                                        tempString = Digits.GetValueOrDefault("two");
-                                        i += 2;
+                                        tempString = "2";
                                     }
                                     else if (s.Substring(i).Length > 4 && s[i + 1].ToString().Equals("h") && s[i + 2].ToString().Equals("r") && s[i + 3].ToString().Equals("e") && s[i + 4].ToString().Equals("e"))
                                     {
-                                        tempString = Digits.GetValueOrDefault("three");
-                                        i += 4;
+                                        tempString = "3";
                                     }
                                     break;
                                 case "f":
                                     if (s.Substring(i).Length > 3 && s[i + 1].ToString().Equals("o") && s[i + 2].ToString().Equals("u") && s[i + 3].ToString().Equals("r"))
                                     {
-                                        tempString = Digits.GetValueOrDefault("four");
+                                        tempString = "4";
                                     }
                                     else if (s.Substring(i).Length > 3 && s[i + 1].ToString().Equals("i") && s[i + 2].ToString().Equals("v") && s[i + 3].ToString().Equals("e"))
                                     {
-                                        tempString = Digits.GetValueOrDefault("five");
+                                        tempString = "5";
                                     }
-                                    i += 3;
                                     break;
                                 case "s":
                                     if (s.Substring(i).Length > 2 && s[i + 1].ToString().Equals("i") && s[i + 2].ToString().Equals("x"))
                                     {
-                                        tempString = Digits.GetValueOrDefault("six");
-                                        i += 2;
+                                        tempString = "6";
                                     }
                                     else if (s.Substring(i).Length > 4 && s[i + 1].ToString().Equals("e") && s[i + 2].ToString().Equals("v") && s[i + 3].ToString().Equals("e") && s[i + 4].ToString().Equals("n"))
                                     {
-                                        tempString = Digits.GetValueOrDefault("seven");
-                                        i += 4;
+                                        tempString = "7";
                                     }
                                     break;
                                 case "e":
                                     if (s.Substring(i).Length > 4 && s[i + 1].ToString().Equals("i") && s[i + 2].ToString().Equals("g") && s[i + 3].ToString().Equals("h") && s[i + 4].ToString().Equals("t"))
                                     {
-                                        tempString = Digits.GetValueOrDefault("eight");
-                                        i += 4;
+                                        tempString = "8";
                                     }
                                     break;
                                 case "n":
                                     if (s.Substring(i).Length > 3 && s[i + 1].ToString().Equals("i") && s[i + 2].ToString().Equals("n") && s[i + 3].ToString().Equals("e"))
                                     {
-                                        tempString = Digits.GetValueOrDefault("nine");
-                                        i += 3;
+                                        tempString = "9";
                                     }
                                     break;
                                 default:
@@ -171,7 +163,7 @@
                             }
                         }
 
-                        if (string.IsNullOrEmpty(tempString))
+                        if (!string.IsNullOrEmpty(tempString))
                         {
                             if (string.IsNullOrEmpty(First))
                             {
