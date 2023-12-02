@@ -5,7 +5,6 @@
         public string First { get; set; }
         public string Second { get; set; }
         public List<string> CalibrationValues { get; set; }
-        public Dictionary<string, string> Digits { get; set; }
         public List<string> LetterList { get; set; }
 
         public Day01(string day, bool hasInput) : base(day, hasInput)
@@ -13,19 +12,6 @@
             First = "";
             Second = "";
             CalibrationValues = new List<string>();
-            Digits = new Dictionary<string, string>()
-            {
-                { "one", "1" },
-                { "two", "2" },
-                { "three", "3" },
-                { "four", "4" },
-                { "five", "5" },
-                { "six", "6"  },
-                { "seven", "7" },
-                { "eight", "8"  },
-                { "nine", "9" },
-                { "zero", "0" }
-            };
             LetterList = new List<string>()
             {
                 "o", "t", "f", "s", "e", "n", "z"
@@ -105,7 +91,6 @@
                     }
                     else
                     {
-                        //   9ninehbsgkcthree1nineeightsix9
                         if (LetterList.Contains(s[i].ToString()) || (tempString.Length > 0 && LetterList.Contains(tempString[0].ToString())))
                         {
                             switch (s[i].ToString())
