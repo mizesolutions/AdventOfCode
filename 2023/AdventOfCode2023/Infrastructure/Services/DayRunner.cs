@@ -19,8 +19,8 @@ namespace AdventOfCode2023.Infrastructure.Services
         {
             DayRun = new Dictionary<string, BaseDay>()
             {
-                { "day01", new Day01("day01", IsInput)},
-                //{ "day02", new Day02("day02", IsInput)},
+                //{ "day01", new Day01("day01", IsInput)},
+                { "day02", new Day02("day02", IsInput)},
                 //{ "day03", new Day03("day03", IsInput)},
                 //{ "day04", new Day04("day04", IsInput)},
                 //{ "day05", new Day05("day05", IsInput)},
