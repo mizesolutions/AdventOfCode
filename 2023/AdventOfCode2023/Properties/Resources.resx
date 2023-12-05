@@ -120,4 +120,7 @@
   <data name="day01" xml:space="preserve">
     <value>.\Infrastructure\Input\day01.txt</value>
   </data>
+  <data name="day02" xml:space="preserve">
+    <value>.\Infrastructure\Input\day02.txt</value>
+  </data>
 </root>
