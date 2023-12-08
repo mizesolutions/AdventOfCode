@@ -24,9 +24,9 @@ namespace AdventOfCode2023.Infrastructure.Services
                 //{ "day03", new Day03("day03", IsInput)},
                 //{ "day04", new Day04("day04", IsInput)},
                 //{ "day05", new Day05("day05", IsInput)},
-                { "day06", new Day06("day06", IsInput)},
+                //{ "day06", new Day06("day06", IsInput)},
                 //{ "day07", new Day07("day07", IsInput)},
-                //{ "day08", new Day08("day08", IsInput)},
+                { "day08", new Day08("day08", IsInput)},
                 //{ "day09", new Day09("day09", IsInput)},
                 //{ "day10", new Day10("day10", IsInput)},
             };
