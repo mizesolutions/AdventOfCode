@@ -77,55 +77,128 @@ namespace AdventOfCode2023.Days
         {
             PrintCurrentMethod();
 
-            foreach (var i in Map)
-            {
-                if (i.Position.ToLower().EndsWith("a"))
-                {
-                    MultiNodeMap.Add(i);
-                }
-            }
+            //foreach (var i in Map)
+            //{
+            //    if (i.Position.ToLower().EndsWith("a"))
+            //    {
+            //        MultiNodeMap.Add(i);
+            //    }
+            //}
 
-            var isEnd = false;
-            var steps = 0;
-            var finished = 0;
-            while (!isEnd)
-            {
-                for (var i = 0; i < Directions.Length; i++)
-                {
-                    for (var j = 0; j < MultiNodeMap.Count; j++)
-                    {
-                        var index = 0;
-                        if (Directions[i] == 'L')
-                        {
-                            index = Map.FindIndex(a => a.Position.ToLower().Contains(MultiNodeMap[j].Left.ToLower()));
-                        }
-                        else
-                        {
-                            index = Map.FindIndex(a => a.Position.ToLower().Contains(MultiNodeMap[j].Right.ToLower()));
-                        }
-                        MultiNodeMap[j] = Map[index];
-                        if (MultiNodeMap[j].Position.ToLower().EndsWith('z'))
-                        {
-                            finished++;
-                        }
-                    }
-                    steps++;
-                    //foreach (var ix in MultiNodeMap)
-                    //{
-                    //    Log.Information(ix.Position.ToString());
-                    //}
-                    //Log.Information("");
-                    isEnd = MultiNodeMap.All(a => a.Position.ToLower().EndsWith('z'));
+            //var stepList = new List<int>();
+            //var isEnd = false;
+            //for (var j = 0; j < MultiNodeMap.Count; j++)
+            //{
+            //    Console.WriteLine(" ");
+            //    Console.WriteLine(MultiNodeMap[j].Position);
 
-                    if (!isEnd && i == Directions.Length - 1)
-                    {
-                        i = -1;
-                    }
-                }
-            }
-            Result2 = steps;
+            //    var steps = 0;
+            //    for (var i = 0; i < Directions.Count(); i++)
+            //    {
+            //        var index = 0;
+            //        if (Directions[i] == 'L')
+            //        {
+            //            index = Map.FindIndex(a => a.Position.ToLower().Contains(MultiNodeMap[j].Left.ToLower()));
+            //        }
+            //        else
+            //        {
+            //            index = Map.FindIndex(a => a.Position.ToLower().Contains(MultiNodeMap[j].Right.ToLower()));
+            //        }
+            //        MultiNodeMap[j] = Map[index];
+            //        steps++;
+
+            //        if (i == Directions.Count() - 1)
+            //        {
+            //            i = -1;
+            //        }
+
+            //        if (MultiNodeMap[j].Position.ToLower().EndsWith('z'))
+            //        {
+            //            stepList.Add(steps);
+            //            Console.WriteLine(MultiNodeMap[j].Position);
+            //            i = Directions.Count() * 800;
+            //        }
+            //    }
+            //    Console.WriteLine(stepList[j]);
+            //}
+            //Console.WriteLine(" ");
+            //foreach (var n in stepList)
+            //{
+            //    Console.WriteLine(n);
+            //}
+
+            //var resultList = new List<long>()
+            //{
+            //    0,0,0,0,0,0
+            //};
+
+            //while (!isEnd)
+            //{
+            //    for (var x = 0; x < stepList.Count(); x++)
+            //    {
+            //        var temp = (resultList[x] + stepList[x]);
+            //        resultList[x] = temp;
+            //    }
+            //    isEnd = !resultList.Any(o => o != resultList[0]);
+            //}
+
+            //Result2 = steps;
+            ChatGPT();
 
             PrintResults(Result2);
+        }
+
+
+        private void ChatGPT()
+        {
+            // Define the map as a dictionary where the key is the node name
+            // and the value is a tuple of left and right connections.
+            Dictionary<string, (string left, string right)> map = new Dictionary<string, (string, string)>
+            {
+                { "11A", ("11B", "XXX") },
+                { "11B", ("XXX", "11Z") },
+                { "11Z", ("11B", "XXX") },
+                { "22A", ("22B", "XXX") },
+                { "22B", ("22C", "22C") },
+                { "22C", ("22Z", "22Z") },
+                { "22Z", ("22B", "22B") },
+                { "XXX", ("XXX", "XXX") }
+            };
+
+            // Find all nodes that end with A
+            List<string> startingNodes = new List<string>();
+            foreach (var node in map.Keys)
+            {
+                if (node.EndsWith("A"))
+                {
+                    startingNodes.Add(node);
+                }
+            }
+
+            // Initialize the set of current nodes with starting nodes
+            HashSet<string> currentNodes = new HashSet<string>(startingNodes);
+
+            // Initialize the step counter
+            int steps = 0;
+
+            // Simulate the navigation until all nodes end with Z
+            while (!currentNodes.All(node => node.EndsWith("Z")))
+            {
+                // Update the set of current nodes based on left and right connections
+                HashSet<string> newNodes = new HashSet<string>();
+                foreach (var currentNode in currentNodes)
+                {
+                    var connections = map[currentNode];
+                    newNodes.Add(connections.left);
+                    newNodes.Add(connections.right);
+                }
+
+                currentNodes = newNodes;
+                steps++;
+            }
+
+            // Output the result
+            Console.WriteLine($"It takes {steps} steps before you're only on nodes that end with Z.");
         }
     }
 }
