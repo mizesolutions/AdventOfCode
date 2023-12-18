@@ -1,0 +1,52 @@
+{
+  "profiles": {
+    "WSL": {
+      "commandName": "WSL2",
+      "distributionName": ""
+    },
+    "AOC-Day01": {
+      "commandName": "Project",
+      "commandLineArgs": "day01"
+    },
+    "AOC-Day02": {
+      "commandName": "Project",
+      "commandLineArgs": "day02"
+    },
+    "AOC-Day03": {
+      "commandName": "Project",
+      "commandLineArgs": "day03"
+    },
+    "AOC-Day04": {
+      "commandName": "Project",
+      "commandLineArgs": "day04"
+    },
+    "AOC-Day05": {
+      "commandName": "Project",
+      "commandLineArgs": "day05"
+    },
+    "AOC-Day06": {
+      "commandName": "Project",
+      "commandLineArgs": "day06"
+    },
+    "AOC-Day07": {
+      "commandName": "Project",
+      "commandLineArgs": "day07"
+    },
+    "AOC-Day08": {
+      "commandName": "Project",
+      "commandLineArgs": "day08"
+    },
+    "AOC-Day09": {
+      "commandName": "Project",
+      "commandLineArgs": "day09"
+    },
+    "AOC-Day10": {
+      "commandName": "Project",
+      "commandLineArgs": "day10"
+    },
+    "AOC-Day15": {
+      "commandName": "Project",
+      "commandLineArgs": "day15"
+    }
+  }
+}
